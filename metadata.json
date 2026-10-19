@@ -1,0 +1,6 @@
+{
+  "name": "PvZ Tactics Online",
+  "description": "Semi-turnbased Plants vs. Zombies tactical lawn defense web game with global leaderboards, daily challenge seeds, community world boss raid, and cloud saving.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
