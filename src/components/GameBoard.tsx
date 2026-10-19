@@ -312,8 +312,9 @@ export const GameBoard: React.FC<GameBoardProps> = ({
                   );
                 })}
             </div>
-          ))}
-        </div>
+          );
+        })}
+      </div>
       </div>
 
       {/* Lawn Footer Curb */}
