@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Application, Container, Graphics, Text, TextStyle } from 'pixi.js';
 import {
   FloatingText,
   LawnHazard,
@@ -8,13 +9,16 @@ import {
   TurnPhase,
   ZombieInstance,
 } from '../types/game';
-import { PlantArtwork } from './artwork/PlantArtwork';
-import { ZombieArtwork } from './artwork/ZombieArtwork';
-import { HazardArtwork } from './artwork/HazardArtwork';
-import { LawnMower } from './LawnMower';
-import { Shovel, AlertOctagon } from 'lucide-react';
+import {
+  drawPlant,
+  drawZombie,
+  drawHazard,
+  drawProjectile,
+  drawLawnMower,
+} from '../pixi/drawEntities';
+import { Cpu, ShieldCheck } from 'lucide-react';
 
-interface GameBoardProps {
+export interface GameBoardProps {
   plants: PlantInstance[];
   zombies: ZombieInstance[];
   hazards: LawnHazard[];
@@ -28,6 +32,14 @@ interface GameBoardProps {
   onTileClick: (row: number, col: number) => void;
 }
 
+const CANVAS_WIDTH = 960;
+const CANVAS_HEIGHT = 520;
+const PORCH_WIDTH = 80;
+const ROWS = 5;
+const COLS = 8;
+const TILE_WIDTH = (CANVAS_WIDTH - PORCH_WIDTH) / COLS; // 110px
+const TILE_HEIGHT = CANVAS_HEIGHT / ROWS; // 104px
+
 export const GameBoard: React.FC<GameBoardProps> = ({
   plants,
   zombies,
@@ -37,290 +49,400 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   lawnMowers,
   selectedPlantDef,
   isShovelActive,
-  turnPhase,
   lawnTheme = 'day',
   onTileClick,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const appRef = useRef<Application | null>(null);
+
+  // Live performance stats
+  const [fps, setFps] = useState<number>(60);
   const [hoveredTile, setHoveredTile] = useState<{ row: number; col: number } | null>(null);
 
-  const ROWS = 5;
-  const COLS = 8; // Faster paced: 8 discrete columns (0-7)
+  // Keep latest props in a ref so the Pixi ticker always reads fresh state without re-creating the app
+  const stateRef = useRef({
+    plants,
+    zombies,
+    hazards,
+    projectiles,
+    floatingTexts,
+    lawnMowers,
+    selectedPlantDef,
+    isShovelActive,
+    lawnTheme,
+    hoveredTile,
+  });
+
+  stateRef.current = {
+    plants,
+    zombies,
+    hazards,
+    projectiles,
+    floatingTexts,
+    lawnMowers,
+    selectedPlantDef,
+    isShovelActive,
+    lawnTheme,
+    hoveredTile,
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    const app = new Application();
+    appRef.current = app;
+
+    let time = 0;
+    let fpsFrames = 0;
+    let lastFpsTime = performance.now();
+
+    // Scene Graph Containers
+    const stage = app.stage;
+    const backgroundLayer = new Graphics();
+    const mowerLayer = new Graphics();
+    const hazardLayer = new Graphics();
+    const plantLayer = new Graphics();
+    const zombieLayer = new Graphics();
+    const projectileLayer = new Graphics();
+    const overlayLayer = new Graphics();
+    const textLayer = new Container();
+
+    stage.addChild(backgroundLayer);
+    stage.addChild(mowerLayer);
+    stage.addChild(hazardLayer);
+    stage.addChild(plantLayer);
+    stage.addChild(zombieLayer);
+    stage.addChild(projectileLayer);
+    stage.addChild(overlayLayer);
+    stage.addChild(textLayer);
+
+    const initPixi = async () => {
+      await app.init({
+        width: CANVAS_WIDTH,
+        height: CANVAS_HEIGHT,
+        background: '#050b14',
+        resolution: Math.min(window.devicePixelRatio || 1, 2),
+        autoDensity: true,
+        antialias: true,
+      });
+
+      if (!isMounted || !containerRef.current) {
+        app.destroy(true);
+        return;
+      }
+
+      containerRef.current.appendChild(app.canvas);
+      app.canvas.className = 'w-full h-auto block select-none rounded-b';
+      app.canvas.style.touchAction = 'none';
+
+      // 60 FPS Render Loop
+      app.ticker.add((ticker) => {
+        time += ticker.deltaTime / 60;
+        fpsFrames++;
+
+        const now = performance.now();
+        if (now - lastFpsTime >= 1000) {
+          setFps(Math.round((fpsFrames * 1000) / (now - lastFpsTime)));
+          fpsFrames = 0;
+          lastFpsTime = now;
+        }
+
+        const state = stateRef.current;
+
+        // 1. Draw Lawn Background
+        backgroundLayer.clear();
+        // Porch Curb
+        backgroundLayer.rect(0, 0, PORCH_WIDTH, CANVAS_HEIGHT).fill(0x1f2937);
+        backgroundLayer.rect(PORCH_WIDTH - 3, 0, 3, CANVAS_HEIGHT).fill(0x374151);
+
+        for (let row = 0; row < ROWS; row++) {
+          const isPoolLane = state.lawnTheme === 'pool' && (row === 2 || row === 3);
+
+          // Porch lane divider
+          backgroundLayer.rect(0, row * TILE_HEIGHT, PORCH_WIDTH, 1).fill(0x374151);
+
+          for (let col = 0; col < COLS; col++) {
+            const isCheckered = (row + col) % 2 === 0;
+            const x = PORCH_WIDTH + col * TILE_WIDTH;
+            const y = row * TILE_HEIGHT;
+
+            let tileColor = isCheckered ? 0x276e27 : 0x2f822f;
+            if (isPoolLane) {
+              tileColor = isCheckered ? 0x0284c7 : 0x0369a1;
+            } else if (state.lawnTheme === 'roof') {
+              tileColor = isCheckered ? 0xb45309 : 0x9a3412;
+            } else if (state.lawnTheme === 'night') {
+              tileColor = isCheckered ? 0x14532d : 0x052e16;
+            }
+
+            backgroundLayer.rect(x, y, TILE_WIDTH, TILE_HEIGHT).fill(tileColor);
+
+            // Water ripples in pool lane
+            if (isPoolLane) {
+              const rippleOffset = Math.sin(time * 3 + col) * 6;
+              backgroundLayer
+                .roundRect(x + 20 + rippleOffset, y + TILE_HEIGHT / 2, 40, 2, 1)
+                .fill({ color: 0xffffff, alpha: 0.25 });
+            }
+
+            // Grid border lines
+            backgroundLayer
+              .rect(x, y, TILE_WIDTH, TILE_HEIGHT)
+              .stroke({ width: 1, color: isPoolLane ? 0x075985 : 0x14532d, alpha: 0.35 });
+          }
+        }
+
+        // 2. Draw Lawnmowers
+        mowerLayer.clear();
+        for (let row = 0; row < ROWS; row++) {
+          const isAvailable = state.lawnMowers[row] ?? true;
+          drawLawnMower(mowerLayer, 16, row * TILE_HEIGHT + 24, isAvailable, time);
+        }
+
+        // 3. Draw Hazards
+        hazardLayer.clear();
+        for (const hazard of state.hazards) {
+          const hx = PORCH_WIDTH + hazard.col * TILE_WIDTH + TILE_WIDTH / 2;
+          const hy = hazard.row * TILE_HEIGHT + TILE_HEIGHT / 2;
+          hazardLayer.position.set(hx, hy);
+          drawHazard(hazardLayer, hazard, time);
+        }
+        hazardLayer.position.set(0, 0);
+
+        // 4. Draw Plants
+        plantLayer.clear();
+        for (const plant of state.plants) {
+          const px = PORCH_WIDTH + plant.col * TILE_WIDTH + TILE_WIDTH / 2;
+          const py = plant.row * TILE_HEIGHT + TILE_HEIGHT / 2;
+          plantLayer.position.set(px, py);
+          drawPlant(plantLayer, plant, time);
+        }
+        plantLayer.position.set(0, 0);
+
+        // 5. Draw Zombies (supports hundreds with batch WebGL)
+        zombieLayer.clear();
+        for (const zombie of state.zombies) {
+          const zx = PORCH_WIDTH + zombie.col * TILE_WIDTH + TILE_WIDTH / 2;
+          const zy = zombie.row * TILE_HEIGHT + TILE_HEIGHT / 2;
+          zombieLayer.position.set(zx, zy);
+          drawZombie(zombieLayer, zombie, time);
+        }
+        zombieLayer.position.set(0, 0);
+
+        // 6. Draw Projectiles (supports hundreds/thousands)
+        projectileLayer.clear();
+        for (const proj of state.projectiles) {
+          const currentCol = proj.fromCol + (proj.toCol - proj.fromCol) * proj.progress;
+          const px = PORCH_WIDTH + currentCol * TILE_WIDTH + TILE_WIDTH / 2;
+          const py = proj.row * TILE_HEIGHT + TILE_HEIGHT / 2;
+          projectileLayer.position.set(px, py);
+          drawProjectile(projectileLayer, proj, time);
+        }
+        projectileLayer.position.set(0, 0);
+
+        // 7. Interactive Hover Overlay & Ghost Placement Preview
+        overlayLayer.clear();
+        if (state.hoveredTile) {
+          const { row, col } = state.hoveredTile;
+          const hx = PORCH_WIDTH + col * TILE_WIDTH;
+          const hy = row * TILE_HEIGHT;
+
+          const plantOnTile = state.plants.find((p) => p.row === row && p.col === col);
+          const hazardOnTile = state.hazards.find((h) => h.row === row && h.col === col);
+          const isBlocked = !!hazardOnTile && hazardOnTile.type !== 'toxic_puddle';
+          const canPlant = state.selectedPlantDef && !plantOnTile && !isBlocked;
+          const canShovel = state.isShovelActive && (!!plantOnTile || hazardOnTile?.type === 'tombstone');
+
+          if (canPlant && state.selectedPlantDef) {
+            // Yellow placement highlight
+            overlayLayer
+              .roundRect(hx + 2, hy + 2, TILE_WIDTH - 4, TILE_HEIGHT - 4, 8)
+              .fill({ color: 0x22c55e, alpha: 0.25 })
+              .stroke({ width: 2, color: 0xfacc15, alpha: 0.9 });
+
+            // Ghost Preview of plant
+            overlayLayer.position.set(hx + TILE_WIDTH / 2, hy + TILE_HEIGHT / 2);
+            overlayLayer.alpha = 0.6;
+            drawPlant(
+              overlayLayer,
+              {
+                instanceId: 'preview',
+                plantId: state.selectedPlantDef.id,
+                row,
+                col,
+                hp: state.selectedPlantDef.maxHp,
+                maxHp: state.selectedPlantDef.maxHp,
+                turnsAlive: 0,
+                actionCounter: 0,
+              },
+              time
+            );
+            overlayLayer.alpha = 1;
+            overlayLayer.position.set(0, 0);
+          } else if (canShovel) {
+            // Red Shovel highlight
+            overlayLayer
+              .roundRect(hx + 2, hy + 2, TILE_WIDTH - 4, TILE_HEIGHT - 4, 8)
+              .fill({ color: 0xdc2626, alpha: 0.3 })
+              .stroke({ width: 2, color: 0xef4444, alpha: 0.9 });
+
+            // Draw Shovel icon
+            const sx = hx + TILE_WIDTH / 2;
+            const sy = hy + TILE_HEIGHT / 2 + Math.sin(time * 8) * 3;
+            overlayLayer.roundRect(sx - 3, sy - 14, 6, 20, 2).fill(0x78350f);
+            overlayLayer.poly([sx - 10, sy + 6, sx, sy + 18, sx + 10, sy + 6]).fill(0x94a3b8);
+          } else if (state.selectedPlantDef && (plantOnTile || isBlocked)) {
+            // Red blocked warning
+            overlayLayer
+              .roundRect(hx + 2, hy + 2, TILE_WIDTH - 4, TILE_HEIGHT - 4, 8)
+              .fill({ color: 0xdc2626, alpha: 0.2 })
+              .stroke({ width: 2, color: 0xef4444, alpha: 0.8 });
+          } else {
+            // Neutral hover tile border
+            overlayLayer
+              .roundRect(hx + 2, hy + 2, TILE_WIDTH - 4, TILE_HEIGHT - 4, 8)
+              .stroke({ width: 1.5, color: 0xffffff, alpha: 0.4 });
+          }
+        }
+
+        // 8. Floating Combat Text
+        textLayer.removeChildren();
+        for (const ft of state.floatingTexts) {
+          const tx = PORCH_WIDTH + ft.col * TILE_WIDTH + TILE_WIDTH / 2;
+          const ty = ft.row * TILE_HEIGHT + 14;
+
+          const textColor =
+            ft.color === 'yellow'
+              ? 0xfacc15
+              : ft.color === 'cyan'
+              ? 0x38bdf8
+              : ft.color === 'red'
+              ? 0xef4444
+              : ft.color === 'purple'
+              ? 0xc084fc
+              : 0xf97316;
+
+          const label = new Text({
+            text: ft.text,
+            style: new TextStyle({
+              fontFamily: 'Outfit, sans-serif',
+              fontSize: 16,
+              fontWeight: '900',
+              fill: textColor,
+              stroke: { color: 0x000000, width: 4 },
+              dropShadow: {
+                alpha: 0.8,
+                angle: Math.PI / 6,
+                blur: 3,
+                color: 0x000000,
+                distance: 2,
+              },
+            }),
+          });
+          label.anchor.set(0.5, 0.5);
+          label.position.set(tx, ty);
+          textLayer.addChild(label);
+        }
+      });
+    };
+
+    initPixi();
+
+    return () => {
+      isMounted = false;
+      app.destroy(true, { children: true, texture: true });
+    };
+  }, []);
+
+  // Mouse & Touch Interaction with the Lawn Canvas
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clientX = e.clientX - rect.left;
+    const clientY = e.clientY - rect.top;
+
+    // Scale from CSS display coordinates to 960x520 virtual canvas
+    const scaleX = CANVAS_WIDTH / rect.width;
+    const scaleY = CANVAS_HEIGHT / rect.height;
+
+    const canvasX = clientX * scaleX;
+    const canvasY = clientY * scaleY;
+
+    if (canvasX >= PORCH_WIDTH && canvasX <= CANVAS_WIDTH && canvasY >= 0 && canvasY <= CANVAS_HEIGHT) {
+      const col = Math.floor((canvasX - PORCH_WIDTH) / TILE_WIDTH);
+      const row = Math.floor(canvasY / TILE_HEIGHT);
+
+      if (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
+        setHoveredTile({ row, col });
+        return;
+      }
+    }
+    setHoveredTile(null);
+  };
+
+  const handlePointerLeave = () => {
+    setHoveredTile(null);
+  };
+
+  const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clientX = e.clientX - rect.left;
+    const clientY = e.clientY - rect.top;
+
+    const scaleX = CANVAS_WIDTH / rect.width;
+    const scaleY = CANVAS_HEIGHT / rect.height;
+
+    const canvasX = clientX * scaleX;
+    const canvasY = clientY * scaleY;
+
+    if (canvasX >= PORCH_WIDTH && canvasX <= CANVAS_WIDTH && canvasY >= 0 && canvasY <= CANVAS_HEIGHT) {
+      const col = Math.floor((canvasX - PORCH_WIDTH) / TILE_WIDTH);
+      const row = Math.floor(canvasY / TILE_HEIGHT);
+
+      if (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
+        onTileClick(row, col);
+      }
+    }
+  };
+
+  const totalEntities = plants.length + zombies.length + projectiles.length + hazards.length;
 
   return (
     <div className="relative w-full max-w-5xl mx-auto overflow-hidden rounded-xl border-4 border-amber-950/80 bg-stone-900 shadow-2xl select-none">
-      {/* Soil Curb / Fence Top Header */}
-      <div className="w-full h-4 bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 border-b border-amber-800/40" />
-
-      {/* Main Lawn Arena Container */}
-      <div className="relative flex w-full">
-        {/* Left Side: Porch Curb with Lawn Mowers / Pool Cleaners */}
-        <div className="flex flex-col w-12 sm:w-16 shrink-0 bg-stone-800 border-r-2 border-stone-700 z-10">
-          {Array.from({ length: ROWS }).map((_, rowIdx) => {
-            const isPoolLane = lawnTheme === 'pool' && (rowIdx === 2 || rowIdx === 3);
-            return (
-              <div
-                key={rowIdx}
-                className={`h-20 sm:h-24 border-b border-stone-700/60 flex items-center justify-center p-1 ${
-                  isPoolLane ? 'bg-cyan-950/80' : 'bg-stone-800/90'
-                }`}
-              >
-                <LawnMower
-                  isAvailable={lawnMowers[rowIdx]}
-                  isTriggered={false}
-                  className="w-10 sm:w-12 h-9 sm:h-10"
-                />
-              </div>
-            );
-          })}
+      {/* Top Soil Curb Header with Engine Info & FPS */}
+      <div className="w-full h-8 bg-gradient-to-r from-amber-950 via-stone-900 to-amber-950 border-b border-amber-800/40 px-3 flex items-center justify-between text-xs font-mono">
+        <div className="flex items-center gap-2 text-emerald-400 font-bold">
+          <Cpu className="w-4 h-4 text-emerald-400 animate-pulse" />
+          <span>PIXI.JS v8 WebGL Accelerated</span>
+          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-700/60 text-[10px] text-emerald-300">
+            {fps} FPS
+          </span>
         </div>
 
-        {/* Tactical 5x8 Lawn Grid */}
-        <div className="relative flex-1 grid grid-rows-5 bg-emerald-950">
-          {Array.from({ length: ROWS }).map((_, rowIdx) => {
-            const isPoolLane = lawnTheme === 'pool' && (rowIdx === 2 || rowIdx === 3);
-
-            return (
-              <div
-                key={rowIdx}
-                className={`grid grid-cols-8 h-20 sm:h-24 border-b relative ${
-                  isPoolLane ? 'border-cyan-800/60' : 'border-emerald-900/60'
-                }`}
-              >
-                {Array.from({ length: COLS }).map((_, colIdx) => {
-                  const plantOnTile = plants.find((p) => p.row === rowIdx && p.col === colIdx);
-                  const hazardOnTile = hazards.find((h) => h.row === rowIdx && h.col === colIdx);
-                  const isCheckered = (rowIdx + colIdx) % 2 === 0;
-                  const isHovered =
-                    hoveredTile?.row === rowIdx && hoveredTile?.col === colIdx;
-
-                  const isBlockedByHazard = !!hazardOnTile && hazardOnTile.type !== 'toxic_puddle';
-                  const canPlant = selectedPlantDef && !plantOnTile && !isBlockedByHazard;
-                  const canShovel = isShovelActive && (!!plantOnTile || hazardOnTile?.type === 'tombstone');
-
-                  // Determine tile color based on lawn theme & pool lane
-                  let tileBg = isCheckered ? 'bg-[#276e27]' : 'bg-[#2f822f]';
-                  if (lawnTheme === 'pool' && isPoolLane) {
-                    tileBg = isCheckered ? 'bg-[#0284c7]' : 'bg-[#0369a1]';
-                  } else if (lawnTheme === 'roof') {
-                    tileBg = isCheckered ? 'bg-[#b45309]' : 'bg-[#9a3412]';
-                  } else if (lawnTheme === 'night') {
-                    tileBg = isCheckered ? 'bg-[#14532d]' : 'bg-[#052e16]';
-                  }
-
-                  return (
-                    <div
-                      key={colIdx}
-                      onClick={() => onTileClick(rowIdx, colIdx)}
-                      onMouseEnter={() => setHoveredTile({ row: rowIdx, col: colIdx })}
-                      onMouseLeave={() => setHoveredTile(null)}
-                      className={`relative border-r flex items-center justify-center transition-colors duration-100 cursor-pointer ${
-                        isPoolLane ? 'border-cyan-800/40' : 'border-emerald-900/40'
-                      } ${tileBg} ${
-                        isHovered && canPlant
-                          ? 'ring-2 ring-inset ring-amber-400/80 bg-emerald-600/60'
-                          : isHovered && selectedPlantDef && (plantOnTile || isBlockedByHazard)
-                          ? 'ring-2 ring-inset ring-red-500/80 bg-red-950/40'
-                          : ''
-                      } ${
-                        isHovered && canShovel
-                          ? 'ring-2 ring-inset ring-red-500 bg-red-950/40'
-                          : ''
-                      }`}
-                    >
-                      {/* Pool lane water ripples */}
-                      {isPoolLane && !plantOnTile && (
-                        <div className="absolute inset-0 opacity-20 pointer-events-none flex items-center justify-around">
-                          <div className="w-8 h-0.5 bg-white rounded-full animate-pulse" />
-                        </div>
-                      )}
-                    {/* Dynamic Lawn Hazard on this Tile */}
-                    {hazardOnTile && (
-                      <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none p-1">
-                        <HazardArtwork
-                          type={hazardOnTile.type}
-                          hp={hazardOnTile.hp}
-                          maxHp={hazardOnTile.maxHp}
-                          turnsRemaining={hazardOnTile.turnsRemaining}
-                          className="w-14 sm:w-16 h-14 sm:h-16"
-                        />
-                      </div>
-                    )}
-
-                    {/* Plant in Tile */}
-                    {plantOnTile && (
-                      <div className="relative flex flex-col items-center justify-center w-full h-full z-20 pointer-events-none">
-                        <PlantArtwork
-                          plantId={plantOnTile.plantId}
-                          hp={plantOnTile.hp}
-                          maxHp={plantOnTile.maxHp}
-                          isArmed={plantOnTile.isArmed}
-                          chewingTurnsRemaining={plantOnTile.chewingTurnsRemaining}
-                          className="w-14 sm:w-16 h-14 sm:h-16"
-                        />
-
-                        {/* Plant HP Bar if damaged */}
-                        {plantOnTile.hp < plantOnTile.maxHp && (
-                          <div className="absolute bottom-1 w-10 sm:w-12 h-1.5 bg-slate-950 rounded-full border border-slate-700 overflow-hidden">
-                            <div
-                              className="h-full bg-emerald-400 transition-all"
-                              style={{
-                                width: `${Math.max(0, (plantOnTile.hp / plantOnTile.maxHp) * 100)}%`,
-                              }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Translucent Placement Preview when hovering */}
-                    {isHovered && canPlant && (
-                      <div className="absolute inset-0 flex items-center justify-center opacity-60 pointer-events-none z-20">
-                        <PlantArtwork
-                          plantId={selectedPlantDef.id}
-                          className="w-12 sm:w-14 h-12 sm:h-14"
-                        />
-                      </div>
-                    )}
-
-                    {/* Blocked placement alert */}
-                    {isHovered && selectedPlantDef && isBlockedByHazard && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-red-950/50 pointer-events-none z-20">
-                        <AlertOctagon className="w-6 h-6 text-red-400" />
-                      </div>
-                    )}
-
-                    {/* Shovel Dig Preview */}
-                    {isHovered && canShovel && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-red-900/30 pointer-events-none z-30">
-                        <Shovel className="w-8 h-8 text-red-400 animate-bounce" />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-
-              {/* Grid-locked Zombies in this row: strictly stationed on discrete integer tiles 0 to 8 */}
-              {zombies
-                .filter((z) => z.row === rowIdx)
-                .map((zombie) => {
-                  // Discrete grid calculation: zombie.col is strictly an integer tile index (0 to 8)
-                  const leftPercentage = (zombie.col / COLS) * 100;
-
-                  return (
-                    <div
-                      key={zombie.instanceId}
-                      className="absolute top-0 h-full flex flex-col items-center justify-center z-25 transition-all duration-150 ease-out pointer-events-none"
-                      style={{
-                        left: `${leftPercentage}%`,
-                        width: `${100 / COLS}%`,
-                      }}
-                    >
-                      <ZombieArtwork
-                        zombieId={zombie.zombieId}
-                        hp={zombie.hp}
-                        maxHp={zombie.maxHp}
-                        isSlowed={zombie.slowedTurns > 0}
-                        isEating={zombie.isEating}
-                        hasSpecialArmor={zombie.hasSpecialArmor}
-                        hasVaulted={zombie.hasVaulted}
-                        isHypnotized={zombie.isHypnotized}
-                        className="w-14 sm:w-16 h-18 sm:h-22"
-                      />
-
-                      {/* Zombie HP Bar */}
-                      <div className="w-10 sm:w-12 h-1.5 bg-slate-950 rounded-full border border-slate-700 overflow-hidden mt-0.5">
-                        <div
-                          className={`h-full transition-all ${
-                            zombie.isHypnotized
-                              ? 'bg-purple-400'
-                              : zombie.slowedTurns > 0
-                              ? 'bg-cyan-400'
-                              : 'bg-red-500'
-                          }`}
-                          style={{
-                            width: `${Math.max(0, (zombie.hp / zombie.maxHp) * 100)}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-
-              {/* Projectiles flying in this row */}
-              {projectiles
-                .filter((proj) => proj.row === rowIdx)
-                .map((proj) => {
-                  const currentCol =
-                    proj.fromCol + (proj.toCol - proj.fromCol) * proj.progress;
-                  const leftPercentage = (currentCol / COLS) * 100;
-
-                  return (
-                    <div
-                      key={proj.id}
-                      className="absolute top-1/2 -translate-y-1/2 z-30 pointer-events-none"
-                      style={{ left: `${leftPercentage}%` }}
-                    >
-                      {proj.type === 'melon' ? (
-                        <div className="w-6 h-5 rounded-full bg-emerald-500 border border-emerald-300 ring-2 ring-emerald-600/70 shadow-lg flex items-center justify-center transform -rotate-12 animate-pulse">
-                          <div className="w-4 h-0.5 bg-emerald-800" />
-                        </div>
-                      ) : proj.type === 'spore' ? (
-                        <div className="w-4 h-4 rounded-full bg-purple-500 border border-purple-300 ring-4 ring-purple-500/40 shadow-purple-500/80 animate-ping">
-                          <div className="w-1.5 h-1.5 rounded-full bg-white mx-auto mt-1" />
-                        </div>
-                      ) : (
-                        <div
-                          className={`w-4 h-4 rounded-full border shadow-md flex items-center justify-center ${
-                            proj.type === 'frostpea'
-                              ? 'bg-cyan-300 border-cyan-100 ring-2 ring-cyan-400/50'
-                              : proj.type === 'firepea'
-                              ? 'bg-gradient-to-r from-amber-400 to-red-500 border-yellow-200 ring-2 ring-orange-500/70 shadow-orange-500/50 animate-pulse'
-                              : 'bg-emerald-400 border-emerald-200 ring-2 ring-emerald-500/40'
-                          }`}
-                        >
-                          <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-
-              {/* Floating Combat Texts in this row */}
-              {floatingTexts
-                .filter((ft) => ft.row === rowIdx)
-                .map((ft) => {
-                  const leftPercentage = (ft.col / COLS) * 100;
-                  const colorClass =
-                    ft.color === 'yellow'
-                      ? 'text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]'
-                      : ft.color === 'cyan'
-                      ? 'text-cyan-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]'
-                      : ft.color === 'red'
-                      ? 'text-red-400 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]'
-                      : ft.color === 'purple'
-                      ? 'text-purple-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]'
-                      : 'text-orange-400 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]';
-
-                  return (
-                    <div
-                      key={ft.id}
-                      className={`absolute top-2 z-40 font-mono font-black text-sm tracking-wide animate-float-damage pointer-events-none ${colorClass}`}
-                      style={{ left: `${leftPercentage + 1.5}%` }}
-                    >
-                      {ft.text}
-                    </div>
-                  );
-                })}
-            </div>
-          );
-        })}
+        <div className="flex items-center gap-3 text-stone-400 text-[11px]">
+          <span>
+            Entities: <strong className="text-amber-300">{totalEntities}</strong> (
+            <span className="text-emerald-400">{plants.length}P</span> /{' '}
+            <span className="text-red-400">{zombies.length}Z</span> /{' '}
+            <span className="text-cyan-400">{projectiles.length}Proj</span>)
+          </span>
+          <span className="hidden sm:flex items-center gap-1 text-emerald-400">
+            <ShieldCheck className="w-3.5 h-3.5" /> High-Cap Ready
+          </span>
+        </div>
       </div>
-      </div>
+
+      {/* Main Pixi.js Canvas Viewport */}
+      <div
+        ref={containerRef}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+        onClick={handleCanvasClick}
+        className="relative w-full aspect-[960/520] cursor-pointer bg-slate-950"
+      />
 
       {/* Lawn Footer Curb */}
-      <div className="w-full h-4 bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 border-t border-amber-800/40 flex items-center justify-between px-4 text-[10px] font-mono text-amber-500/80">
-        <span className="capitalize">Lawn Type: {lawnTheme} Grid</span>
-        <span>Grid Alignment: Fast 8 Tiles (0-7)</span>
+      <div className="w-full h-5 bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 border-t border-amber-800/40 flex items-center justify-between px-4 text-[10px] font-mono text-amber-500/80">
+        <span className="capitalize">Theme: {lawnTheme} Lawn</span>
+        <span>Resolution: 960x520 WebGL (5x8 Grid)</span>
       </div>
     </div>
   );
