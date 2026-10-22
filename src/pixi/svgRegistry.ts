@@ -249,137 +249,270 @@ export const SVG_PLANTS: Record<string, string> = {
 export const SVG_ZOMBIES: Record<string, string> = {
   basic: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="45" cy="95" rx="24" ry="4" fill="#0f172a" opacity="0.3" />
-      <path d="M 32 46 L 24 74 L 66 74 L 58 46 Z" fill="#713f12" stroke="#451a03" stroke-width="2" />
-      <polygon points="45,46 47,60 45,66 43,60" fill="#dc2626" />
-      <path d="M 28 74 L 26 95 L 36 95 L 43 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <path d="M 45 74 L 52 95 L 62 95 L 60 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <ellipse cx="30" cy="95" rx="7" ry="3" fill="#1c1917" />
-      <ellipse cx="58" cy="95" rx="7" ry="3" fill="#1c1917" />
-      <path d="M 28 50 L 14 56 L 6 62" stroke="#84cc16" stroke-width="6" stroke-linecap="round" />
-      <ellipse cx="45" cy="30" rx="17" ry="19" fill="#84cc16" stroke="#4d7c0f" stroke-width="2.5" />
-      <circle cx="38" cy="27" r="5" fill="#fef08a" stroke="#65a30d" stroke-width="1.5" />
-      <circle cx="39" cy="27" r="2.5" fill="#0f172a" />
-      <circle cx="51" cy="28" r="3.5" fill="#fef08a" stroke="#65a30d" stroke-width="1.5" />
-      <circle cx="51.5" cy="28" r="1.8" fill="#0f172a" />
-      <path d="M 36 38 Q 45 42 53 36" stroke="#365314" stroke-width="2.5" fill="none" stroke-linecap="round" />
+      <!-- Shadow -->
+      <ellipse cx="50" cy="95" rx="24" ry="4.5" fill="#090d16" opacity="0.4" />
+
+      <!-- Legs & Blue Slacks -->
+      <path d="M 38 68 L 32 92 L 42 92 L 48 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <path d="M 48 68 L 54 92 L 64 92 L 58 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <polygon points="32,88 35,92 38,88 41,92 42,88" fill="#172554" />
+      <ellipse cx="34" cy="93" rx="8" ry="3.5" fill="#18181b" stroke="#09090b" stroke-width="1" />
+      <ellipse cx="60" cy="93" rx="8" ry="3.5" fill="#18181b" stroke="#09090b" stroke-width="1" />
+
+      <!-- Back Reaching Arm -->
+      <path d="M 42 45 L 26 49 L 14 47" stroke="#4a3220" stroke-width="6" stroke-linecap="round" />
+      <circle cx="12" cy="47" r="3.5" fill="#6f9342" stroke="#384f1e" stroke-width="1" />
+      <path d="M 10 45 L 6 44 M 10 47 L 5 48 M 10 49 L 7 51" stroke="#6f9342" stroke-width="1.8" stroke-linecap="round" />
+
+      <!-- Tattered Brown Business Blazer -->
+      <path d="M 34 38 L 24 68 L 68 68 L 60 38 Z" fill="#5c4028" stroke="#382416" stroke-width="2" />
+      <polygon points="24,68 30,64 36,68 42,63 48,68 54,64 60,68 68,68" fill="#422c19" />
+
+      <!-- Front Reaching Arm -->
+      <path d="M 36 48 L 18 53 L 8 50" stroke="#5c4028" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="6" cy="50" r="4" fill="#7ea54b" stroke="#3f5923" stroke-width="1.2" />
+      <path d="M 4 48 L 0 46 M 4 50 L -1 51 M 4 52 L 1 54" stroke="#7ea54b" stroke-width="2" stroke-linecap="round" />
+
+      <!-- White Shirt Collar & Crooked Red Tie -->
+      <polygon points="45,38 48,54 46,56 43,38" fill="#f8fafc" />
+      <polygon points="42,38 45,44 48,38" fill="#e2e8f0" />
+      <polygon points="46,40 49,56 46,64 43,56" fill="#dc2626" stroke="#991b1b" stroke-width="1" />
+
+      <!-- Decayed Zombie Head -->
+      <path d="M 34 26 C 30 12 60 8 66 22 C 70 34 62 46 48 46 C 36 46 34 34 34 26 Z" fill="#7ea54b" stroke="#3f5923" stroke-width="2.5" />
+
+      <!-- Stray Wispy Hairs -->
+      <path d="M 45 10 Q 42 2 36 4" stroke="#18181b" stroke-width="1.5" fill="none" stroke-linecap="round" />
+      <path d="M 51 9 Q 55 1 60 5" stroke="#18181b" stroke-width="1.5" fill="none" stroke-linecap="round" />
+
+      <!-- Brow Wrinkle -->
+      <path d="M 38 16 Q 48 19 58 15" stroke="#3f5923" stroke-width="1.8" fill="none" />
+
+      <!-- Mismatched Googly Bloodshot Eyes -->
+      <ellipse cx="40" cy="22" rx="6.5" ry="7" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="41" cy="22" r="3" fill="#09090b" />
+      <circle cx="42" cy="20.5" r="1" fill="#ffffff" />
+      <path d="M 36 19 Q 38 21 37 24" stroke="#ef4444" stroke-width="0.8" fill="none" opacity="0.75" />
+
+      <ellipse cx="55" cy="24" rx="4.5" ry="5" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="55" cy="24" r="2.2" fill="#09090b" />
+      <circle cx="56" cy="23" r="0.8" fill="#ffffff" />
+
+      <!-- Slack Jaw with Crooked Rotten Teeth -->
+      <path d="M 35 32 Q 46 35 57 30 C 58 43 48 45 46 45 C 36 45 34 40 35 32 Z" fill="#1c280f" stroke="#3f5923" stroke-width="1.5" />
+      <polygon points="38,32 40,37 42,32" fill="#fef9c3" stroke="#854d0e" stroke-width="0.5" />
+      <polygon points="44,33 46,38 48,33" fill="#fef9c3" stroke="#854d0e" stroke-width="0.5" />
+      <polygon points="51,32 53,36 55,32" fill="#fef9c3" stroke="#854d0e" stroke-width="0.5" />
+      <polygon points="41,43 43,38 45,43" fill="#fef9c3" stroke="#854d0e" stroke-width="0.5" />
+      <polygon points="48,43 50,38 52,43" fill="#fef9c3" stroke="#854d0e" stroke-width="0.5" />
     </svg>
   `,
 
   conehead: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="45" cy="95" rx="24" ry="4" fill="#0f172a" opacity="0.3" />
-      <path d="M 32 46 L 24 74 L 66 74 L 58 46 Z" fill="#713f12" stroke="#451a03" stroke-width="2" />
-      <polygon points="45,46 47,60 45,66 43,60" fill="#dc2626" />
-      <path d="M 28 74 L 26 95 L 36 95 L 43 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <path d="M 45 74 L 52 95 L 62 95 L 60 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <ellipse cx="30" cy="95" rx="7" ry="3" fill="#1c1917" />
-      <ellipse cx="58" cy="95" rx="7" ry="3" fill="#1c1917" />
-      <path d="M 28 50 L 14 56 L 6 62" stroke="#84cc16" stroke-width="6" stroke-linecap="round" />
-      <ellipse cx="45" cy="30" rx="17" ry="19" fill="#84cc16" stroke="#4d7c0f" stroke-width="2.5" />
-      <circle cx="38" cy="27" r="5" fill="#fef08a" stroke="#65a30d" stroke-width="1.5" />
-      <circle cx="39" cy="27" r="2.5" fill="#0f172a" />
-      <circle cx="51" cy="28" r="3.5" fill="#fef08a" stroke="#65a30d" stroke-width="1.5" />
-      <circle cx="51.5" cy="28" r="1.8" fill="#0f172a" />
-      <path d="M 36 38 Q 45 42 53 36" stroke="#365314" stroke-width="2.5" fill="none" stroke-linecap="round" />
-      <polygon points="45,2 32,24 58,24" fill="#f97316" stroke="#c2410c" stroke-width="2" />
-      <rect x="36" y="14" width="18" height="4" fill="#ffffff" />
-      <polygon points="26,24 64,24 62,28 28,28" fill="#ea580c" />
+      <!-- Shadow -->
+      <ellipse cx="50" cy="95" rx="24" ry="4.5" fill="#090d16" opacity="0.4" />
+
+      <!-- Legs -->
+      <path d="M 38 68 L 32 92 L 42 92 L 48 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <path d="M 48 68 L 54 92 L 64 92 L 58 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <ellipse cx="34" cy="93" rx="8" ry="3.5" fill="#18181b" stroke="#09090b" stroke-width="1" />
+      <ellipse cx="60" cy="93" rx="8" ry="3.5" fill="#18181b" stroke="#09090b" stroke-width="1" />
+
+      <!-- Reaching Arms -->
+      <path d="M 42 45 L 26 49 L 14 47" stroke="#4a3220" stroke-width="6" stroke-linecap="round" />
+      <circle cx="12" cy="47" r="3.5" fill="#6f9342" stroke="#384f1e" stroke-width="1" />
+      <path d="M 34 38 L 24 68 L 68 68 L 60 38 Z" fill="#5c4028" stroke="#382416" stroke-width="2" />
+      <polygon points="24,68 30,64 36,68 42,63 48,68 54,64 60,68 68,68" fill="#422c19" />
+      <path d="M 36 48 L 18 53 L 8 50" stroke="#5c4028" stroke-width="7" stroke-linecap="round" />
+      <circle cx="6" cy="50" r="4" fill="#7ea54b" stroke="#3f5923" stroke-width="1.2" />
+
+      <!-- Shirt & Tie -->
+      <polygon points="45,38 48,54 46,56 43,38" fill="#f8fafc" />
+      <polygon points="46,40 49,56 46,64 43,56" fill="#dc2626" stroke="#991b1b" stroke-width="1" />
+
+      <!-- Head Base -->
+      <path d="M 34 26 C 30 12 60 8 66 22 C 70 34 62 46 48 46 C 36 46 34 34 34 26 Z" fill="#7ea54b" stroke="#3f5923" stroke-width="2.5" />
+
+      <!-- Eyes & Slack Jaw -->
+      <ellipse cx="40" cy="22" rx="6.5" ry="7" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="41" cy="22" r="3" fill="#09090b" />
+      <ellipse cx="55" cy="24" rx="4.5" ry="5" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="55" cy="24" r="2.2" fill="#09090b" />
+      <path d="M 35 32 Q 46 35 57 30 C 58 43 48 45 46 45 C 36 45 34 40 35 32 Z" fill="#1c280f" stroke="#3f5923" stroke-width="1.5" />
+      <polygon points="38,32 40,37 42,32" fill="#fef9c3" />
+      <polygon points="46,33 48,38 50,33" fill="#fef9c3" />
+      <polygon points="43,43 45,38 47,43" fill="#fef9c3" />
+
+      <!-- Traffic Cone on Head -->
+      <polygon points="48,-4 30,18 66,18" fill="#f97316" stroke="#c2410c" stroke-width="2" />
+      <ellipse cx="48" cy="18" rx="19" ry="4" fill="#ea580c" stroke="#9a3412" stroke-width="1.5" />
+      <rect x="35" y="7" width="26" height="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.8" transform="rotate(-1 48 9)" />
     </svg>
   `,
 
   buckethead: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="45" cy="95" rx="24" ry="4" fill="#0f172a" opacity="0.3" />
-      <path d="M 32 46 L 24 74 L 66 74 L 58 46 Z" fill="#713f12" stroke="#451a03" stroke-width="2" />
-      <polygon points="45,46 47,60 45,66 43,60" fill="#dc2626" />
-      <path d="M 28 74 L 26 95 L 36 95 L 43 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <path d="M 45 74 L 52 95 L 62 95 L 60 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <ellipse cx="30" cy="95" rx="7" ry="3" fill="#1c1917" />
-      <ellipse cx="58" cy="95" rx="7" ry="3" fill="#1c1917" />
-      <path d="M 28 50 L 14 56 L 6 62" stroke="#84cc16" stroke-width="6" stroke-linecap="round" />
-      <ellipse cx="45" cy="30" rx="17" ry="19" fill="#84cc16" stroke="#4d7c0f" stroke-width="2.5" />
-      <circle cx="38" cy="27" r="5" fill="#fef08a" stroke="#65a30d" stroke-width="1.5" />
-      <circle cx="39" cy="27" r="2.5" fill="#0f172a" />
-      <circle cx="51" cy="28" r="3.5" fill="#fef08a" stroke="#65a30d" stroke-width="1.5" />
-      <circle cx="51.5" cy="28" r="1.8" fill="#0f172a" />
-      <path d="M 36 38 Q 45 42 53 36" stroke="#365314" stroke-width="2.5" fill="none" stroke-linecap="round" />
-      <path d="M 30 8 L 60 8 L 58 28 L 32 28 Z" fill="#94a3b8" stroke="#475569" stroke-width="2.5" />
-      <ellipse cx="45" cy="8" rx="15" ry="3" fill="#cbd5e1" stroke="#475569" stroke-width="1" />
-      <circle cx="38" cy="16" r="1.5" fill="#334155" />
+      <!-- Shadow -->
+      <ellipse cx="50" cy="95" rx="24" ry="4.5" fill="#090d16" opacity="0.4" />
+
+      <!-- Legs -->
+      <path d="M 38 68 L 32 92 L 42 92 L 48 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <path d="M 48 68 L 54 92 L 64 92 L 58 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <ellipse cx="34" cy="93" rx="8" ry="3.5" fill="#18181b" stroke="#09090b" stroke-width="1" />
+      <ellipse cx="60" cy="93" rx="8" ry="3.5" fill="#18181b" stroke="#09090b" stroke-width="1" />
+
+      <!-- Reaching Arms -->
+      <path d="M 42 45 L 26 49 L 14 47" stroke="#4a3220" stroke-width="6" stroke-linecap="round" />
+      <circle cx="12" cy="47" r="3.5" fill="#6f9342" stroke="#384f1e" stroke-width="1" />
+      <path d="M 34 38 L 24 68 L 68 68 L 60 38 Z" fill="#5c4028" stroke="#382416" stroke-width="2" />
+      <polygon points="24,68 30,64 36,68 42,63 48,68 54,64 60,68 68,68" fill="#422c19" />
+      <path d="M 36 48 L 18 53 L 8 50" stroke="#5c4028" stroke-width="7" stroke-linecap="round" />
+      <circle cx="6" cy="50" r="4" fill="#7ea54b" stroke="#3f5923" stroke-width="1.2" />
+
+      <!-- Shirt & Tie -->
+      <polygon points="45,38 48,54 46,56 43,38" fill="#f8fafc" />
+      <polygon points="46,40 49,56 46,64 43,56" fill="#dc2626" stroke="#991b1b" stroke-width="1" />
+
+      <!-- Head Base -->
+      <path d="M 34 26 C 30 12 60 8 66 22 C 70 34 62 46 48 46 C 36 46 34 34 34 26 Z" fill="#7ea54b" stroke="#3f5923" stroke-width="2.5" />
+
+      <!-- Eyes & Slack Jaw -->
+      <ellipse cx="40" cy="22" rx="6.5" ry="7" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="41" cy="22" r="3" fill="#09090b" />
+      <ellipse cx="55" cy="24" rx="4.5" ry="5" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="55" cy="24" r="2.2" fill="#09090b" />
+      <path d="M 35 32 Q 46 35 57 30 C 58 43 48 45 46 45 C 36 45 34 40 35 32 Z" fill="#1c280f" stroke="#3f5923" stroke-width="1.5" />
+      <polygon points="38,32 40,37 42,32" fill="#fef9c3" />
+      <polygon points="46,33 48,38 50,33" fill="#fef9c3" />
+      <polygon points="43,43 45,38 47,43" fill="#fef9c3" />
+
+      <!-- Galvanized Steel Bucket on Head -->
+      <path d="M 28 6 L 68 6 L 64 24 L 32 24 Z" fill="#94a3b8" stroke="#475569" stroke-width="2.5" />
+      <ellipse cx="48" cy="6" rx="20" ry="3.5" fill="#cbd5e1" stroke="#475569" stroke-width="1" />
+      <ellipse cx="48" cy="24" rx="16" ry="3" fill="#64748b" />
+      <!-- Dents & Bucket Handle -->
+      <circle cx="36" cy="14" r="2" fill="#334155" />
+      <circle cx="58" cy="16" r="2.5" fill="#334155" />
+      <path d="M 28 12 Q 48 0 68 12" stroke="#475569" stroke-width="2" fill="none" />
     </svg>
   `,
 
   football: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="45" cy="95" rx="26" ry="4" fill="#0f172a" opacity="0.3" />
-      <path d="M 26 44 L 18 72 L 72 72 L 64 44 Z" fill="#b91c1c" stroke="#7f1d1d" stroke-width="2.5" />
-      <text x="45" y="62" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold">77</text>
-      <path d="M 24 72 L 22 95 L 36 95 L 43 72 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
-      <path d="M 47 72 L 54 95 L 68 95 L 66 72 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
-      <ellipse cx="28" cy="95" rx="8" ry="3" fill="#000000" />
-      <ellipse cx="62" cy="95" rx="8" ry="3" fill="#000000" />
-      <ellipse cx="45" cy="28" rx="19" ry="17" fill="#dc2626" stroke="#991b1b" stroke-width="3" />
-      <path d="M 45 11 L 45 35" stroke="#ffffff" stroke-width="3" />
-      <ellipse cx="45" cy="32" rx="10" ry="8" fill="#84cc16" />
-      <circle cx="41" cy="30" r="2.5" fill="#fef08a" />
-      <circle cx="49" cy="30" r="2.5" fill="#fef08a" />
+      <ellipse cx="50" cy="95" rx="26" ry="4.5" fill="#090d16" opacity="0.4" />
+      <path d="M 36 68 L 30 92 L 42 92 L 48 68 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+      <path d="M 48 68 L 54 92 L 66 92 L 60 68 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+      <ellipse cx="33" cy="93" rx="8" ry="3.5" fill="#09090b" />
+      <ellipse cx="62" cy="93" rx="8" ry="3.5" fill="#09090b" />
+      <!-- Heavy Red Shoulder Pads & Jersey -->
+      <path d="M 20 40 L 14 70 L 76 70 L 70 40 Z" fill="#b91c1c" stroke="#7f1d1d" stroke-width="3" />
+      <text x="45" y="60" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="900" font-family="sans-serif">77</text>
+      <!-- Thick Red Football Helmet -->
+      <ellipse cx="45" cy="24" rx="21" ry="19" fill="#dc2626" stroke="#991b1b" stroke-width="3" />
+      <path d="M 45 5 L 45 30" stroke="#ffffff" stroke-width="3.5" />
+      <!-- Dark Face Grill -->
+      <path d="M 32 26 L 58 26 M 34 30 L 56 30 M 36 34 L 54 34" stroke="#475569" stroke-width="2.5" stroke-linecap="round" />
+      <!-- Eyes inside helmet -->
+      <circle cx="39" cy="24" r="3" fill="#fef08a" />
+      <circle cx="39" cy="24" r="1.5" fill="#09090b" />
+      <circle cx="51" cy="24" r="3" fill="#fef08a" />
+      <circle cx="51" cy="24" r="1.5" fill="#09090b" />
     </svg>
   `,
 
   newspaper: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="45" cy="95" rx="24" ry="4" fill="#0f172a" opacity="0.3" />
-      <path d="M 32 46 L 24 74 L 66 74 L 58 46 Z" fill="#713f12" stroke="#451a03" stroke-width="2" />
-      <path d="M 28 74 L 26 95 L 36 95 L 43 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <path d="M 45 74 L 52 95 L 62 95 L 60 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <ellipse cx="45" cy="30" rx="17" ry="19" fill="#84cc16" stroke="#4d7c0f" stroke-width="2.5" />
-      <circle cx="38" cy="27" r="5" stroke="#1e293b" stroke-width="2" fill="#fef08a" />
-      <circle cx="51" cy="28" r="4.5" stroke="#1e293b" stroke-width="2" fill="#fef08a" />
-      <rect x="6" y="50" width="28" height="24" fill="#e2e8f0" stroke="#475569" stroke-width="1.5" />
-      <line x1="10" y1="56" x2="30" y2="56" stroke="#0f172a" stroke-width="2" />
-      <line x1="10" y1="62" x2="30" y2="62" stroke="#64748b" stroke-width="1" />
-      <line x1="10" y1="68" x2="26" y2="68" stroke="#64748b" stroke-width="1" />
+      <ellipse cx="50" cy="95" rx="24" ry="4.5" fill="#090d16" opacity="0.4" />
+      <path d="M 38 68 L 32 92 L 42 92 L 48 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <path d="M 48 68 L 54 92 L 64 92 L 58 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <ellipse cx="34" cy="93" rx="8" ry="3.5" fill="#18181b" />
+      <ellipse cx="60" cy="93" rx="8" ry="3.5" fill="#18181b" />
+      <path d="M 34 38 L 24 68 L 68 68 L 60 38 Z" fill="#5c4028" stroke="#382416" stroke-width="2" />
+      <polygon points="46,40 49,56 46,64 43,56" fill="#dc2626" />
+      <path d="M 34 26 C 30 12 60 8 66 22 C 70 34 62 46 48 46 C 36 46 34 34 34 26 Z" fill="#7ea54b" stroke="#3f5923" stroke-width="2.5" />
+      <!-- Reading Spectacles -->
+      <circle cx="40" cy="22" r="7" stroke="#18181b" stroke-width="2" fill="#fef08a" />
+      <circle cx="40" cy="22" r="2.5" fill="#09090b" />
+      <circle cx="55" cy="23" r="6" stroke="#18181b" stroke-width="2" fill="#fef08a" />
+      <circle cx="55" cy="23" r="2.2" fill="#09090b" />
+      <path d="M 47 22 L 49 22" stroke="#18181b" stroke-width="2.5" />
+      <!-- Open Broadsheet Newspaper in front -->
+      <rect x="4" y="44" width="34" height="32" fill="#f1f5f9" stroke="#475569" stroke-width="2" rx="2" />
+      <line x1="8" y1="50" x2="34" y2="50" stroke="#0f172a" stroke-width="3" />
+      <line x1="8" y1="56" x2="34" y2="56" stroke="#64748b" stroke-width="1.5" />
+      <line x1="8" y1="62" x2="34" y2="62" stroke="#64748b" stroke-width="1.5" />
+      <line x1="8" y1="68" x2="28" y2="68" stroke="#64748b" stroke-width="1.5" />
     </svg>
   `,
 
   polevaulter: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="45" cy="95" rx="24" ry="4" fill="#0f172a" opacity="0.3" />
-      <path d="M 30 46 L 24 74 L 66 74 L 60 46 Z" fill="#ea580c" stroke="#9a3412" stroke-width="2" />
-      <path d="M 28 74 L 26 95 L 36 95 L 43 74 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
-      <path d="M 45 74 L 52 95 L 62 95 L 60 74 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
-      <ellipse cx="45" cy="30" rx="17" ry="19" fill="#84cc16" stroke="#4d7c0f" stroke-width="2.5" />
-      <circle cx="38" cy="27" r="5" fill="#fef08a" />
-      <circle cx="51" cy="28" r="3.5" fill="#fef08a" />
-      <line x1="8" y1="10" x2="18" y2="90" stroke="#d97706" stroke-width="5" stroke-linecap="round" />
+      <ellipse cx="50" cy="95" rx="24" ry="4.5" fill="#090d16" opacity="0.4" />
+      <!-- Athletic orange singlet & running shorts -->
+      <path d="M 32 40 L 26 68 L 66 68 L 60 40 Z" fill="#ea580c" stroke="#9a3412" stroke-width="2" />
+      <path d="M 34 68 L 30 92 L 42 92 L 46 68 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+      <path d="M 48 68 L 52 92 L 64 92 L 60 68 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+      <ellipse cx="32" cy="93" rx="8" ry="3.5" fill="#dc2626" />
+      <ellipse cx="60" cy="93" rx="8" ry="3.5" fill="#dc2626" />
+      <!-- Head with Sweatband -->
+      <path d="M 34 26 C 30 12 60 8 66 22 C 70 34 62 46 48 46 C 36 46 34 34 34 26 Z" fill="#7ea54b" stroke="#3f5923" stroke-width="2.5" />
+      <rect x="30" y="14" width="38" height="5" fill="#ffffff" stroke="#94a3b8" stroke-width="1" rx="1" />
+      <!-- Eyes & Slack Jaw -->
+      <ellipse cx="40" cy="24" rx="6" ry="6" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="41" cy="24" r="2.8" fill="#09090b" />
+      <ellipse cx="55" cy="25" rx="4.5" ry="4.5" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="55" cy="25" r="2" fill="#09090b" />
+      <path d="M 36 34 Q 46 37 56 32 C 57 44 47 46 45 46 C 36 46 35 41 36 34 Z" fill="#1c280f" />
+      <polygon points="40,34 42,39 44,34" fill="#fef9c3" />
+      <polygon points="48,35 50,40 52,35" fill="#fef9c3" />
+      <!-- Long Vaulting Pole -->
+      <line x1="6" y1="6" x2="20" y2="92" stroke="#d97706" stroke-width="5" stroke-linecap="round" />
+      <rect x="11" y="42" width="6" height="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1" />
     </svg>
   `,
 
   screendoor: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="45" cy="95" rx="24" ry="4" fill="#0f172a" opacity="0.3" />
-      <path d="M 32 46 L 24 74 L 66 74 L 58 46 Z" fill="#713f12" stroke="#451a03" stroke-width="2" />
-      <path d="M 28 74 L 26 95 L 36 95 L 43 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <path d="M 45 74 L 52 95 L 62 95 L 60 74 Z" fill="#1e3a8a" stroke="#172554" stroke-width="2" />
-      <ellipse cx="45" cy="30" rx="17" ry="19" fill="#84cc16" stroke="#4d7c0f" stroke-width="2.5" />
-      <rect x="6" y="25" width="22" height="65" fill="#475569" stroke="#1e293b" stroke-width="2" rx="2" />
-      <line x1="17" y1="25" x2="17" y2="90" stroke="#94a3b8" stroke-width="1.5" />
-      <line x1="6" y1="55" x2="28" y2="55" stroke="#94a3b8" stroke-width="1.5" />
+      <ellipse cx="50" cy="95" rx="24" ry="4.5" fill="#090d16" opacity="0.4" />
+      <path d="M 38 68 L 32 92 L 42 92 L 48 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <path d="M 48 68 L 54 92 L 64 92 L 58 68 Z" fill="#1e3a8a" stroke="#0f172a" stroke-width="2" />
+      <ellipse cx="34" cy="93" rx="8" ry="3.5" fill="#18181b" />
+      <ellipse cx="60" cy="93" rx="8" ry="3.5" fill="#18181b" />
+      <path d="M 34 38 L 24 68 L 68 68 L 60 38 Z" fill="#5c4028" stroke="#382416" stroke-width="2" />
+      <polygon points="46,40 49,56 46,64 43,56" fill="#dc2626" />
+      <path d="M 34 26 C 30 12 60 8 66 22 C 70 34 62 46 48 46 C 36 46 34 34 34 26 Z" fill="#7ea54b" stroke="#3f5923" stroke-width="2.5" />
+      <ellipse cx="40" cy="22" rx="6.5" ry="7" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="41" cy="22" r="3" fill="#09090b" />
+      <ellipse cx="55" cy="24" rx="4.5" ry="5" fill="#fef08a" stroke="#3f5923" stroke-width="1.5" />
+      <circle cx="55" cy="24" r="2.2" fill="#09090b" />
+      <!-- Screen Door Shield -->
+      <rect x="2" y="20" width="26" height="74" fill="#334155" stroke="#0f172a" stroke-width="3" rx="2" />
+      <rect x="5" y="23" width="20" height="32" fill="#475569" stroke="#64748b" stroke-width="1" />
+      <rect x="5" y="58" width="20" height="32" fill="#475569" stroke="#64748b" stroke-width="1" />
+      <line x1="5" y1="23" x2="25" y2="55" stroke="#94a3b8" stroke-width="1" />
+      <line x1="25" y1="23" x2="5" y2="55" stroke="#94a3b8" stroke-width="1" />
     </svg>
   `,
 
   gargantuar: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="45" cy="96" rx="32" ry="5" fill="#0f172a" opacity="0.4" />
-      <path d="M 20 40 L 14 78 L 76 78 L 70 40 Z" fill="#3f3f46" stroke="#18181b" stroke-width="3" />
-      <path d="M 22 78 L 18 96 L 36 96 L 44 78 Z" fill="#27272a" stroke="#18181b" stroke-width="2.5" />
-      <path d="M 46 78 L 54 96 L 72 96 L 68 78 Z" fill="#27272a" stroke="#18181b" stroke-width="2.5" />
-      <ellipse cx="45" cy="24" rx="22" ry="20" fill="#65a30d" stroke="#365314" stroke-width="3" />
-      <circle cx="37" cy="22" r="4.5" fill="#ef4444" />
-      <circle cx="53" cy="22" r="4.5" fill="#ef4444" />
-      <rect x="2" y="10" width="14" height="80" fill="#78350f" stroke="#451a03" stroke-width="3" rx="2" />
-      <rect x="0" y="8" width="18" height="10" fill="#a1a1aa" />
+      <ellipse cx="50" cy="96" rx="34" ry="5" fill="#090d16" opacity="0.45" />
+      <!-- Giant Ripped Body -->
+      <path d="M 18 36 L 12 76 L 80 76 L 74 36 Z" fill="#27272a" stroke="#18181b" stroke-width="3" />
+      <path d="M 22 76 L 16 96 L 38 96 L 46 76 Z" fill="#18181b" stroke="#09090b" stroke-width="2.5" />
+      <path d="M 48 76 L 56 96 L 76 96 L 70 76 Z" fill="#18181b" stroke="#09090b" stroke-width="2.5" />
+      <!-- Massive Muscular Gray Skull -->
+      <ellipse cx="45" cy="22" rx="24" ry="22" fill="#52525b" stroke="#27272a" stroke-width="3" />
+      <path d="M 32 14 L 40 20 L 36 28" stroke="#ef4444" stroke-width="2" fill="none" />
+      <!-- Glowing Red Eyes -->
+      <circle cx="36" cy="20" r="5" fill="#ef4444" stroke="#7f1d1d" stroke-width="1.5" />
+      <circle cx="36" cy="20" r="2" fill="#ffffff" />
+      <circle cx="52" cy="20" r="5" fill="#ef4444" stroke="#7f1d1d" stroke-width="1.5" />
+      <circle cx="52" cy="20" r="2" fill="#ffffff" />
+      <!-- Giant Telephone Pole Club -->
+      <rect x="0" y="6" width="16" height="86" fill="#78350f" stroke="#451a03" stroke-width="3" rx="2" />
+      <rect x="-2" y="4" width="20" height="12" fill="#a1a1aa" stroke="#52525b" stroke-width="1" />
     </svg>
   `,
 };
