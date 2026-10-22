@@ -10,6 +10,7 @@ import {
   ZombieInstance,
 } from '../types/game';
 import {
+  preloadAllTextures,
   getPlantTexture,
   getZombieTexture,
   getHazardTexture,
@@ -58,7 +59,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   const [fps, setFps] = useState<number>(60);
   const [hoveredTile, setHoveredTile] = useState<{ row: number; col: number } | null>(null);
 
-  // Keep state in a ref so Pixi ticker reads the latest game state without re-creating the WebGL app
+  // Keep state in a ref so Pixi ticker reads fresh props without re-creating the WebGL app
   const stateRef = useRef({
     plants,
     zombies,
@@ -92,7 +93,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     let fpsFrames = 0;
     let lastFpsTime = performance.now();
 
-    // Scene Graph
+    // Scene Graph Layers
     const stage = app.stage;
     const backgroundLayer = new Graphics();
     const mowersContainer = new Container();
@@ -119,7 +120,18 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     stage.addChild(ghostSprite);
     stage.addChild(overlayLayer);
 
+    // Persistent GPU Sprite Pools
+    const mowerSprites: Sprite[] = [];
+    const plantSprites = new Map<string, Sprite>();
+    const zombieSprites = new Map<string, Sprite>();
+    const projectileSprites = new Map<string, Sprite>();
+    const hazardSprites = new Map<string, Sprite>();
+
     const initPixi = async () => {
+      // 1. Preload and rasterize all SVG textures to high-res GPU textures first
+      await preloadAllTextures();
+
+      // 2. Initialize PixiJS v8 Application
       await app.init({
         width: CANVAS_WIDTH,
         height: CANVAS_HEIGHT,
@@ -137,6 +149,16 @@ export const GameBoard: React.FC<GameBoardProps> = ({
       containerRef.current.appendChild(app.canvas);
       app.canvas.className = 'w-full h-auto block select-none rounded-b';
       app.canvas.style.touchAction = 'none';
+
+      // Initialize Lawnmower Sprites on Porch
+      for (let r = 0; r < ROWS; r++) {
+        const mower = new Sprite(getLawnMowerTexture());
+        mower.anchor.set(0.5, 0.5);
+        mower.width = 54;
+        mower.height = 54;
+        mowersContainer.addChild(mower);
+        mowerSprites.push(mower);
+      }
 
       // 60 FPS Render Loop
       app.ticker.add((ticker) => {
@@ -195,48 +217,74 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           }
         }
 
-        // 2. Synchronize Lawnmowers (Porch Column)
-        mowersContainer.removeChildren();
+        // 2. Synchronize Lawnmowers
         for (let row = 0; row < ROWS; row++) {
-          if (state.lawnMowers[row]) {
-            const mower = new Sprite(getLawnMowerTexture());
-            mower.anchor.set(0.5, 0.5);
-            mower.width = 54;
-            mower.height = 54;
-            const engineVibe = Math.sin(time * 16 + row) * 0.8;
-            mower.position.set(PORCH_WIDTH / 2, row * TILE_HEIGHT + TILE_HEIGHT / 2 + engineVibe);
-            mowersContainer.addChild(mower);
+          const mower = mowerSprites[row];
+          if (mower) {
+            const isAvailable = state.lawnMowers[row] ?? true;
+            mower.visible = isAvailable;
+            if (isAvailable) {
+              const engineVibe = Math.sin(time * 16 + row) * 0.8;
+              mower.position.set(PORCH_WIDTH / 2, row * TILE_HEIGHT + TILE_HEIGHT / 2 + engineVibe);
+            }
           }
         }
 
         // 3. Synchronize Hazards
-        hazardsContainer.removeChildren();
+        const activeHazardIds = new Set(state.hazards.map((h) => h.id));
+        // Remove dead hazards
+        for (const [id, sprite] of hazardSprites.entries()) {
+          if (!activeHazardIds.has(id)) {
+            hazardsContainer.removeChild(sprite);
+            hazardSprites.delete(id);
+          }
+        }
+        // Update or add hazards
         for (const hazard of state.hazards) {
-          const hSprite = new Sprite(getHazardTexture(hazard.type));
-          hSprite.anchor.set(0.5, 0.5);
-          hSprite.width = 68;
-          hSprite.height = 68;
+          let hSprite = hazardSprites.get(hazard.id);
+          if (!hSprite) {
+            hSprite = new Sprite(getHazardTexture(hazard.type));
+            hSprite.anchor.set(0.5, 0.5);
+            hSprite.width = 68;
+            hSprite.height = 68;
+            hazardsContainer.addChild(hSprite);
+            hazardSprites.set(hazard.id, hSprite);
+          }
           const hx = PORCH_WIDTH + hazard.col * TILE_WIDTH + TILE_WIDTH / 2;
           const hy = hazard.row * TILE_HEIGHT + TILE_HEIGHT / 2;
           hSprite.position.set(hx, hy);
-          hazardsContainer.addChild(hSprite);
         }
 
-        // 4. Synchronize Plants (High-res SVG Textures on GPU Sprites)
-        plantsContainer.removeChildren();
+        // 4. Synchronize Plants (High-res SVG Textures on Persistent Sprites)
         healthBarsLayer.clear();
+        const activePlantIds = new Set(state.plants.map((p) => p.instanceId));
 
+        // Remove dead / shoveled plants
+        for (const [id, sprite] of plantSprites.entries()) {
+          if (!activePlantIds.has(id)) {
+            plantsContainer.removeChild(sprite);
+            plantSprites.delete(id);
+          }
+        }
+
+        // Update or add plants
         for (const plant of state.plants) {
-          const pSprite = new Sprite(getPlantTexture(plant.plantId));
-          pSprite.anchor.set(0.5, 0.5);
-          pSprite.width = 72;
-          pSprite.height = 72;
+          let pSprite = plantSprites.get(plant.instanceId);
+          if (!pSprite) {
+            pSprite = new Sprite(getPlantTexture(plant.plantId));
+            pSprite.anchor.set(0.5, 0.5);
+            pSprite.width = 72;
+            pSprite.height = 72;
+            plantsContainer.addChild(pSprite);
+            plantSprites.set(plant.instanceId, pSprite);
+          } else {
+            pSprite.texture = getPlantTexture(plant.plantId);
+          }
 
           const px = PORCH_WIDTH + plant.col * TILE_WIDTH + TILE_WIDTH / 2;
           const py = plant.row * TILE_HEIGHT + TILE_HEIGHT / 2;
           const idleBob = Math.sin(time * 3 + plant.col * 0.8) * 2;
           pSprite.position.set(px, py + idleBob);
-          plantsContainer.addChild(pSprite);
 
           // Plant HP Bar if damaged
           if (plant.hp < plant.maxHp) {
@@ -251,13 +299,30 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           }
         }
 
-        // 5. Synchronize Zombies (High-res SVG Textures on GPU Sprites)
-        zombiesContainer.removeChildren();
+        // 5. Synchronize Zombies (High-res SVG Textures on Persistent Sprites)
+        const activeZombieIds = new Set(state.zombies.map((z) => z.instanceId));
+
+        // Remove dead zombies
+        for (const [id, sprite] of zombieSprites.entries()) {
+          if (!activeZombieIds.has(id)) {
+            zombiesContainer.removeChild(sprite);
+            zombieSprites.delete(id);
+          }
+        }
+
+        // Update or add zombies
         for (const zombie of state.zombies) {
-          const zSprite = new Sprite(getZombieTexture(zombie.zombieId));
-          zSprite.anchor.set(0.5, 0.5);
-          zSprite.width = 72;
-          zSprite.height = 80;
+          let zSprite = zombieSprites.get(zombie.instanceId);
+          if (!zSprite) {
+            zSprite = new Sprite(getZombieTexture(zombie.zombieId));
+            zSprite.anchor.set(0.5, 0.5);
+            zSprite.width = 72;
+            zSprite.height = 80;
+            zombiesContainer.addChild(zSprite);
+            zombieSprites.set(zombie.instanceId, zSprite);
+          } else {
+            zSprite.texture = getZombieTexture(zombie.zombieId);
+          }
 
           // Discrete tile placement + walk animation sway
           const zx = PORCH_WIDTH + zombie.col * TILE_WIDTH + TILE_WIDTH / 2;
@@ -276,9 +341,8 @@ export const GameBoard: React.FC<GameBoardProps> = ({
             zSprite.scale.x = -1; // Turned around
           } else {
             zSprite.tint = 0xffffff;
+            zSprite.scale.x = 1;
           }
-
-          zombiesContainer.addChild(zSprite);
 
           // Zombie HP Bar
           const barW = 34;
@@ -292,21 +356,37 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           healthBarsLayer.roundRect(bx, by, fillW, barH, 2).fill(barColor);
         }
 
-        // 6. Synchronize Projectiles (High-res SVG Textures on GPU Sprites)
-        projectilesContainer.removeChildren();
+        // 6. Synchronize Projectiles (High-res SVG Textures on Persistent Sprites)
+        const activeProjIds = new Set(state.projectiles.map((p) => p.id));
+
+        // Remove finished projectiles
+        for (const [id, sprite] of projectileSprites.entries()) {
+          if (!activeProjIds.has(id)) {
+            projectilesContainer.removeChild(sprite);
+            projectileSprites.delete(id);
+          }
+        }
+
+        // Update or add projectiles
         for (const proj of state.projectiles) {
-          const pSprite = new Sprite(getProjectileTexture(proj.type));
-          pSprite.anchor.set(0.5, 0.5);
-          pSprite.width = 24;
-          pSprite.height = 24;
+          let pSprite = projectileSprites.get(proj.id);
+          if (!pSprite) {
+            pSprite = new Sprite(getProjectileTexture(proj.type));
+            pSprite.anchor.set(0.5, 0.5);
+            pSprite.width = 24;
+            pSprite.height = 24;
+            projectilesContainer.addChild(pSprite);
+            projectileSprites.set(proj.id, pSprite);
+          } else {
+            pSprite.texture = getProjectileTexture(proj.type);
+          }
 
           const currentCol = proj.fromCol + (proj.toCol - proj.fromCol) * proj.progress;
           const px = PORCH_WIDTH + currentCol * TILE_WIDTH + TILE_WIDTH / 2;
           const py = proj.row * TILE_HEIGHT + TILE_HEIGHT / 2;
 
           pSprite.position.set(px, py);
-          pSprite.rotation = time * 6; // Spinning projectile flight
-          projectilesContainer.addChild(pSprite);
+          pSprite.rotation = time * 8; // Spinning flight
         }
 
         // 7. Interactive Hover Cursor & Ghost Placement Preview
@@ -461,7 +541,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-30">
           {floatingTexts.map((ft, index) => {
             const leftPct = ((PORCH_WIDTH + ft.col * TILE_WIDTH + TILE_WIDTH / 2) / CANVAS_WIDTH) * 100;
-            // Slight stagger if multiple numbers occur in same tile
             const staggerY = (index % 3) * 6;
             const topPct = ((ft.row * TILE_HEIGHT + 16 + staggerY) / CANVAS_HEIGHT) * 100;
 
