@@ -10,20 +10,26 @@ import {
 const textureCache: Map<string, Texture> = new Map();
 let isInitialized = false;
 
-function svgToCanvasTexture(svgString: string, size = 120): Promise<Texture> {
+function svgToCanvasTexture(svgString: string, targetHeight = 160): Promise<Texture> {
   return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
 
     img.onload = () => {
+      const natW = img.naturalWidth || 120;
+      const natH = img.naturalHeight || 120;
+      const aspect = natW / natH;
+      const canvasH = targetHeight;
+      const canvasW = Math.max(20, Math.round(targetHeight * aspect));
+
       const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
+      canvas.width = canvasW;
+      canvas.height = canvasH;
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(img, 0, 0, size, size);
+        ctx.drawImage(img, 0, 0, canvasW, canvasH);
       }
       resolve(Texture.from(canvas));
     };
@@ -31,8 +37,8 @@ function svgToCanvasTexture(svgString: string, size = 120): Promise<Texture> {
     img.onerror = () => {
       // Fallback canvas if SVG parse fails
       const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
+      canvas.width = targetHeight;
+      canvas.height = targetHeight;
       resolve(Texture.from(canvas));
     };
 
@@ -61,7 +67,7 @@ export async function preloadAllTextures(): Promise<void> {
 
   for (const [id, svg] of Object.entries(SVG_PLANTS)) {
     promises.push(
-      svgToCanvasTexture(svg, 120).then((tex) => {
+      svgToCanvasTexture(svg, 140).then((tex) => {
         textureCache.set(`plant_${id}`, tex);
       })
     );
@@ -69,7 +75,7 @@ export async function preloadAllTextures(): Promise<void> {
 
   for (const [id, svg] of Object.entries(SVG_ZOMBIES)) {
     promises.push(
-      svgToCanvasTexture(svg, 120).then((tex) => {
+      svgToCanvasTexture(svg, 180).then((tex) => {
         textureCache.set(`zombie_${id}`, tex);
       })
     );
@@ -77,7 +83,7 @@ export async function preloadAllTextures(): Promise<void> {
 
   for (const [id, svg] of Object.entries(SVG_HAZARDS)) {
     promises.push(
-      svgToCanvasTexture(svg, 120).then((tex) => {
+      svgToCanvasTexture(svg, 140).then((tex) => {
         textureCache.set(`hazard_${id}`, tex);
       })
     );
@@ -85,14 +91,14 @@ export async function preloadAllTextures(): Promise<void> {
 
   for (const [id, svg] of Object.entries(SVG_PROJECTILES)) {
     promises.push(
-      svgToCanvasTexture(svg, 60).then((tex) => {
+      svgToCanvasTexture(svg, 70).then((tex) => {
         textureCache.set(`proj_${id}`, tex);
       })
     );
   }
 
   promises.push(
-    svgToCanvasTexture(SVG_LAWNMOWER, 100).then((tex) => {
+    svgToCanvasTexture(SVG_LAWNMOWER, 120).then((tex) => {
       textureCache.set('lawnmower', tex);
     })
   );

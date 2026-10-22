@@ -316,13 +316,19 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           if (!zSprite) {
             zSprite = new Sprite(getZombieTexture(zombie.zombieId));
             zSprite.anchor.set(0.5, 0.5);
-            zSprite.width = 72;
-            zSprite.height = 80;
             zombiesContainer.addChild(zSprite);
             zombieSprites.set(zombie.instanceId, zSprite);
           } else {
             zSprite.texture = getZombieTexture(zombie.zombieId);
           }
+
+          // Adjust height & width according to zombie type and natural aspect ratio
+          const isGiant = zombie.zombieId === 'gargantuar' || zombie.zombieId === 'zomboni';
+          const baseH = isGiant ? 104 : 88;
+          const texAspect = zSprite.texture.width / zSprite.texture.height;
+          const baseW = Math.round(baseH * texAspect);
+          zSprite.height = baseH;
+          zSprite.width = baseW;
 
           // Discrete tile placement + walk animation sway
           const zx = PORCH_WIDTH + zombie.col * TILE_WIDTH + TILE_WIDTH / 2;
@@ -333,22 +339,26 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           zSprite.position.set(zx, zy + eatBob);
           zSprite.rotation = walkSway;
 
-          // Status Tints
+          // Status Tints & Direction
           if (zombie.slowedTurns > 0) {
             zSprite.tint = 0x67e8f9; // Icy blue
           } else if (zombie.isHypnotized) {
             zSprite.tint = 0xc084fc; // Purple
-            zSprite.scale.x = -1; // Turned around
           } else {
             zSprite.tint = 0xffffff;
-            zSprite.scale.x = 1;
+          }
+
+          if (zombie.isHypnotized) {
+            zSprite.scale.x = -Math.abs(zSprite.scale.x); // Turned around
+          } else {
+            zSprite.scale.x = Math.abs(zSprite.scale.x);
           }
 
           // Zombie HP Bar
           const barW = 34;
           const barH = 4;
           const bx = zx - barW / 2;
-          const by = zy - 38;
+          const by = zy - (baseH / 2 + 6);
           const fillW = Math.max(0, (zombie.hp / zombie.maxHp) * barW);
           const barColor = zombie.isHypnotized ? 0xc084fc : zombie.slowedTurns > 0 ? 0x38bdf8 : 0xef4444;
 

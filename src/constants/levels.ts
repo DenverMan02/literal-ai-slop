@@ -8,7 +8,7 @@ export const CAMPAIGN_LEVELS: LevelConfig[] = [
     lawnTheme: 'day',
     sunPulseInterval: 3,
     sunPulseAmount: 50,
-    startingSun: 150,
+    startingSun: 50,
     totalWaves: 6,
     rewardTrophies: 100,
     specialModifier: 'Standard daylight conditions. Passive sun pulse every 3 turns. 8-column rapid battle.',
