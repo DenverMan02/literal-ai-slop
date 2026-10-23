@@ -124,6 +124,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     const mowerSprites: Sprite[] = [];
     const plantSprites = new Map<string, Sprite>();
     const zombieSprites = new Map<string, Sprite>();
+    const zombieAnimData = new Map<string, { currentX: number; currentY: number; walkCycle: number }>();
     const projectileSprites = new Map<string, Sprite>();
     const hazardSprites = new Map<string, Sprite>();
 
@@ -307,6 +308,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           if (!activeZombieIds.has(id)) {
             zombiesContainer.removeChild(sprite);
             zombieSprites.delete(id);
+            zombieAnimData.delete(id);
           }
         }
 
@@ -315,7 +317,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           let zSprite = zombieSprites.get(zombie.instanceId);
           if (!zSprite) {
             zSprite = new Sprite(getZombieTexture(zombie.zombieId));
-            zSprite.anchor.set(0.5, 0.5);
+            zSprite.anchor.set(0.5, 0.85); // Anchor at feet for natural shambling walk and rocking
             zombiesContainer.addChild(zSprite);
             zombieSprites.set(zombie.instanceId, zSprite);
           } else {
@@ -324,22 +326,77 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
           // Adjust height & width according to zombie type and natural aspect ratio
           const isGiant = zombie.zombieId === 'gargantuar' || zombie.zombieId === 'zomboni';
-          const baseH = isGiant ? 104 : 88;
-          const texAspect = zSprite.texture.width / zSprite.texture.height;
+          const baseH = isGiant ? 104 : 92;
+          const texAspect = (zSprite.texture.width || 1) / (zSprite.texture.height || 1);
           const baseW = Math.round(baseH * texAspect);
-          zSprite.height = baseH;
-          zSprite.width = baseW;
 
-          // Discrete tile placement + walk animation sway
-          const zx = PORCH_WIDTH + zombie.col * TILE_WIDTH + TILE_WIDTH / 2;
-          const zy = zombie.row * TILE_HEIGHT + TILE_HEIGHT / 2;
-          const walkSway = Math.sin(time * 5 + zombie.instanceId.charCodeAt(0)) * 0.05;
-          const eatBob = zombie.isEating ? Math.sin(time * 12) * 3 : 0;
+          // Target tile coordinate (center of tile, feet at lower boundary)
+          const targetX = PORCH_WIDTH + zombie.col * TILE_WIDTH + TILE_WIDTH / 2;
+          const targetY = zombie.row * TILE_HEIGHT + TILE_HEIGHT / 2 + 32;
 
-          zSprite.position.set(zx, zy + eatBob);
-          zSprite.rotation = walkSway;
+          let anim = zombieAnimData.get(zombie.instanceId);
+          if (!anim) {
+            anim = { currentX: targetX, currentY: targetY, walkCycle: (zombie.instanceId.charCodeAt(0) % 20) };
+            zombieAnimData.set(zombie.instanceId, anim);
+          }
 
-          // Status Tints & Direction
+          const dx = targetX - anim.currentX;
+          const isWalking = Math.abs(dx) > 1.2;
+
+          // Smooth walk across tile instead of instant teleportation
+          if (Math.abs(dx) > TILE_WIDTH * 2) {
+            anim.currentX = targetX;
+          } else {
+            anim.currentX += dx * 0.08;
+          }
+          anim.currentY += (targetY - anim.currentY) * 0.1;
+
+          const speedMultiplier = zombie.slowedTurns > 0 ? 0.5 : 1.0;
+          anim.walkCycle += 0.06 * speedMultiplier;
+
+          let posX = anim.currentX;
+          let posY = anim.currentY;
+          let rot = 0;
+          let scaleXMult = zombie.isHypnotized ? -1.0 : 1.0;
+          let scaleYMult = 1.0;
+
+          if (zombie.isEating) {
+            // EATING ANIMATION: aggressive forward head-dipping chomping
+            const chompPhase = time * 14;
+            const lungeX = -Math.abs(Math.sin(chompPhase)) * 5 * scaleXMult;
+            const chompBob = Math.abs(Math.cos(chompPhase)) * 3;
+            posX += lungeX;
+            posY += chompBob;
+            rot = -Math.sin(chompPhase) * 0.1 * scaleXMult;
+            scaleYMult = 1.0 + Math.sin(chompPhase) * 0.04;
+          } else if (isWalking) {
+            // SHAMBLING LIMPIN WALK CYCLE:
+            const stepBob = Math.abs(Math.sin(anim.walkCycle * 4)) * 4.5;
+            const lurch = Math.sin(anim.walkCycle * 4) * 0.07;
+            const squash = 1.0 + Math.cos(anim.walkCycle * 8) * 0.04;
+
+            posY -= stepBob;
+            rot = lurch * scaleXMult;
+            scaleYMult = squash;
+          } else {
+            // IDLE GROANING & SWAYING:
+            const idlePhase = time * 3 + (zombie.instanceId.charCodeAt(0) % 7);
+            const idleBob = Math.sin(idlePhase) * 2;
+            const idleSway = Math.sin(idlePhase * 0.8) * 0.03;
+
+            posY += idleBob;
+            rot = idleSway * scaleXMult;
+            scaleYMult = 1.0 + Math.sin(idlePhase) * 0.02;
+          }
+
+          zSprite.position.set(posX, posY);
+          zSprite.rotation = rot;
+          zSprite.width = baseW * Math.abs(scaleXMult);
+          zSprite.height = baseH * scaleYMult;
+          zSprite.scale.x = (baseW / (zSprite.texture.width || 1)) * scaleXMult;
+          zSprite.scale.y = (baseH / (zSprite.texture.height || 1)) * scaleYMult;
+
+          // Status Tints
           if (zombie.slowedTurns > 0) {
             zSprite.tint = 0x67e8f9; // Icy blue
           } else if (zombie.isHypnotized) {
@@ -348,17 +405,11 @@ export const GameBoard: React.FC<GameBoardProps> = ({
             zSprite.tint = 0xffffff;
           }
 
-          if (zombie.isHypnotized) {
-            zSprite.scale.x = -Math.abs(zSprite.scale.x); // Turned around
-          } else {
-            zSprite.scale.x = Math.abs(zSprite.scale.x);
-          }
-
           // Zombie HP Bar
           const barW = 34;
           const barH = 4;
-          const bx = zx - barW / 2;
-          const by = zy - (baseH / 2 + 6);
+          const bx = posX - barW / 2;
+          const by = posY - baseH + 4;
           const fillW = Math.max(0, (zombie.hp / zombie.maxHp) * barW);
           const barColor = zombie.isHypnotized ? 0xc084fc : zombie.slowedTurns > 0 ? 0x38bdf8 : 0xef4444;
 
