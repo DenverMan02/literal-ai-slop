@@ -326,13 +326,13 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
           // Adjust height & width according to zombie type and natural aspect ratio
           const isGiant = zombie.zombieId === 'gargantuar' || zombie.zombieId === 'zomboni';
-          const baseH = isGiant ? 104 : 92;
+          const baseH = isGiant ? 96 : 82;
           const texAspect = (zSprite.texture.width || 1) / (zSprite.texture.height || 1);
           const baseW = Math.round(baseH * texAspect);
 
-          // Target tile coordinate (center of tile, feet at lower boundary)
+          // Target tile coordinate (center of tile, feet grounded near bottom of tile)
           const targetX = PORCH_WIDTH + zombie.col * TILE_WIDTH + TILE_WIDTH / 2;
-          const targetY = zombie.row * TILE_HEIGHT + TILE_HEIGHT / 2 + 32;
+          const targetY = zombie.row * TILE_HEIGHT + TILE_HEIGHT / 2 + 28;
 
           let anim = zombieAnimData.get(zombie.instanceId);
           if (!anim) {
