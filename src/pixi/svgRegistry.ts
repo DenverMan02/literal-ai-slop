@@ -6,59 +6,43 @@
 export const SVG_PLANTS: Record<string, string> = {
   sunflower: `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <!-- Stem -->
   <path d="M 50 62 Q 47 78 50 92" stroke="#15803d" stroke-width="6" fill="none" stroke-linecap="round" />
+  <!-- Leaves -->
   <path d="M 49 76 C 30 76 22 84 18 78 C 22 68 36 68 48 74 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" stroke-linejoin="round" />
   <path d="M 24 74 Q 36 73 48 74" stroke="#15803d" stroke-width="1.5" fill="none" />
   <path d="M 51 80 C 70 80 78 88 82 82 C 78 72 64 72 52 78 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" stroke-linejoin="round" />
   <path d="M 76 78 Q 64 77 52 78" stroke="#15803d" stroke-width="1.5" fill="none" />
+  <!-- Leafy collar under head -->
   <path d="M 44 64 Q 50 68 56 64 Q 50 61 44 64 Z" fill="#16a34a" stroke="#15803d" stroke-width="1.5" />
+
+  <!-- 10 distinct petals -->
   <g transform="translate(50, 44)">
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(11.25)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(33.75)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(56.25)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(78.75)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(101.25)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(123.75)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(146.25)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(168.75)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(191.25)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(213.75)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(236.25)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(258.75)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(281.25)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(303.75)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(326.25)" />
-    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(348.75)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(0)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(22.5)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(45)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(67.5)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(90)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(112.5)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(135)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(157.5)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(180)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(202.5)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(225)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(247.5)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(270)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(292.5)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(315)" />
-    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(337.5)" />
+    <ellipse cx="0" cy="-25" rx="10" ry="15" fill="#f59e0b" stroke="#b45309" stroke-width="2.5" transform="rotate(0.0)" /><ellipse cx="0" cy="-25" rx="10" ry="15" fill="#f59e0b" stroke="#b45309" stroke-width="2.5" transform="rotate(45.0)" /><ellipse cx="0" cy="-25" rx="10" ry="15" fill="#f59e0b" stroke="#b45309" stroke-width="2.5" transform="rotate(90.0)" /><ellipse cx="0" cy="-25" rx="10" ry="15" fill="#f59e0b" stroke="#b45309" stroke-width="2.5" transform="rotate(135.0)" /><ellipse cx="0" cy="-25" rx="10" ry="15" fill="#f59e0b" stroke="#b45309" stroke-width="2.5" transform="rotate(180.0)" /><ellipse cx="0" cy="-25" rx="10" ry="15" fill="#f59e0b" stroke="#b45309" stroke-width="2.5" transform="rotate(225.0)" /><ellipse cx="0" cy="-25" rx="10" ry="15" fill="#f59e0b" stroke="#b45309" stroke-width="2.5" transform="rotate(270.0)" /><ellipse cx="0" cy="-25" rx="10" ry="15" fill="#f59e0b" stroke="#b45309" stroke-width="2.5" transform="rotate(315.0)" /><ellipse cx="0" cy="-25" rx="8.5" ry="13.5" fill="#facc15" transform="rotate(0.0)" /><ellipse cx="0" cy="-25" rx="8.5" ry="13.5" fill="#facc15" transform="rotate(45.0)" /><ellipse cx="0" cy="-25" rx="8.5" ry="13.5" fill="#facc15" transform="rotate(90.0)" /><ellipse cx="0" cy="-25" rx="8.5" ry="13.5" fill="#facc15" transform="rotate(135.0)" /><ellipse cx="0" cy="-25" rx="8.5" ry="13.5" fill="#facc15" transform="rotate(180.0)" /><ellipse cx="0" cy="-25" rx="8.5" ry="13.5" fill="#facc15" transform="rotate(225.0)" /><ellipse cx="0" cy="-25" rx="8.5" ry="13.5" fill="#facc15" transform="rotate(270.0)" /><ellipse cx="0" cy="-25" rx="8.5" ry="13.5" fill="#facc15" transform="rotate(315.0)" />
   </g>
-  <circle cx="50" cy="44" r="22" fill="#5c2d11" stroke="#361805" stroke-width="3" />
-  <circle cx="50" cy="44" r="20" fill="#78350f" />
-  <path d="M 33 34 C 40 26 60 26 67 34 C 62 28 38 28 33 34 Z" fill="#92400e" opacity="0.6" />
+
+  <!-- Large Brown Seed Face -->
+  <circle cx="50" cy="44" r="21" fill="#5c2d11" stroke="#361805" stroke-width="3" />
+  <circle cx="50" cy="44" r="19" fill="#78350f" />
+  <!-- Seed texture highlight rim -->
+  <path d="M 34 35 C 40 28 60 28 66 35 C 61 30 39 30 34 35 Z" fill="#92400e" opacity="0.7" />
+
+  <!-- Happy Eyes -->
   <ellipse cx="43" cy="41" rx="4" ry="6.5" fill="#0f172a" />
   <ellipse cx="57" cy="41" rx="4" ry="6.5" fill="#0f172a" />
+  <!-- Big specular dots -->
   <circle cx="44.5" cy="39" r="1.8" fill="#ffffff" />
   <circle cx="58.5" cy="39" r="1.8" fill="#ffffff" />
+  <!-- Small secondary highlight -->
   <circle cx="41.8" cy="43.5" r="0.8" fill="#ffffff" />
   <circle cx="55.8" cy="43.5" r="0.8" fill="#ffffff" />
+
+  <!-- Cheerful open mouth with tongue -->
   <path d="M 43 49 C 43 56 57 56 57 49 Z" fill="#240c02" stroke="#361805" stroke-width="1.8" stroke-linejoin="round" />
   <path d="M 46 51 C 48 54 52 54 54 51 C 52 53.5 48 53.5 46 51 Z" fill="#ef4444" />
 </svg>
   `,
+
   peashooter: `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
   <path d="M 46 60 Q 40 76 46 90" stroke="#15803d" stroke-width="6.5" fill="none" stroke-linecap="round" />

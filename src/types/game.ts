@@ -198,10 +198,24 @@ export interface PlayerProfile {
   trophies: number;
   sunCrests: number;
   highestWaveCampaign: number;
+  campaignLevelIndex?: number;
+  selectedDeck?: PlantId[];
   dailyCompletedDates: string[];
   worldBossTotalDamage: number;
   unlockedPlants: PlantId[];
   soundVolume: number;
   soundEnabled: boolean;
   lastSynced: string;
+}
+
+export interface SaveSlotData {
+  slot: number;
+  name: string;
+  isAutoSave?: boolean;
+  date: string;
+  timestamp: number;
+  campaignLevelIndex: number;
+  trophies: number;
+  rank: number;
+  profile: PlayerProfile;
 }

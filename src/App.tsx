@@ -35,7 +35,7 @@ import { AlmanacView } from './components/views/AlmanacView';
 import { CloudSaveModal } from './components/modals/CloudSaveModal';
 import { GameOverModal } from './components/modals/GameOverModal';
 import { ChooseSeedsModal } from './components/modals/ChooseSeedsModal';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Sun, Shovel, Play } from 'lucide-react';
 
 export default function App() {
   // Navigation & Profile
@@ -45,20 +45,30 @@ export default function App() {
   const [isChoosingSeeds, setIsChoosingSeeds] = useState(false);
   const [gameMode, setGameMode] = useState<GameMode>('CAMPAIGN');
 
-  // Selected Deck for Battle (Max 8 slots)
-  const [selectedDeck, setSelectedDeck] = useState<PlantId[]>([
-    'sunflower',
-    'peashooter',
-    'wallnut',
-    'snowpea',
-    'fumeshroom',
-    'repeater',
-    'cherrybomb',
-    'tallnut',
-  ]);
+  // Selected Deck for Battle (Restored from Save System)
+  const [selectedDeck, setSelectedDeck] = useState<PlantId[]>(() => {
+    const prof = StorageService.getProfile();
+    return prof.selectedDeck && prof.selectedDeck.length > 0
+      ? prof.selectedDeck
+      : [
+          'sunflower',
+          'peashooter',
+          'wallnut',
+          'snowpea',
+          'fumeshroom',
+          'repeater',
+          'cherrybomb',
+          'tallnut',
+        ];
+  });
 
-  // Campaign & Level Configuration
-  const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
+  // Campaign & Level Configuration (Restored from Save System)
+  const [currentLevelIndex, setCurrentLevelIndex] = useState(() => {
+    const prof = StorageService.getProfile();
+    return prof.campaignLevelIndex && prof.campaignLevelIndex < CAMPAIGN_LEVELS.length
+      ? prof.campaignLevelIndex
+      : 0;
+  });
   const activeLevel = CAMPAIGN_LEVELS[currentLevelIndex] || CAMPAIGN_LEVELS[0];
 
   // Combat Battlefield State
@@ -150,11 +160,15 @@ export default function App() {
 
   const handleToggleSeed = (pId: PlantId) => {
     setSelectedDeck((prev) => {
+      let next: PlantId[];
       if (prev.includes(pId)) {
-        return prev.filter((id) => id !== pId);
+        next = prev.filter((id) => id !== pId);
+      } else {
+        if (prev.length >= 8) return prev;
+        next = [...prev, pId];
       }
-      if (prev.length >= 8) return prev;
-      return [...prev, pId];
+      StorageService.updateSelectedDeck(next);
+      return next;
     });
   };
 
@@ -173,10 +187,12 @@ export default function App() {
     const extra = allAvailablePlantIds.filter((id) => !filtered.includes(id));
     const full = [...filtered, ...extra].slice(0, 8);
     setSelectedDeck(full);
+    StorageService.updateSelectedDeck(full);
   };
 
   const handleClearSeeds = () => {
     setSelectedDeck([]);
+    StorageService.updateSelectedDeck([]);
   };
 
   // Check if player can afford and place any available plant right now
@@ -320,7 +336,17 @@ export default function App() {
     if (currentLevelIndex < CAMPAIGN_LEVELS.length - 1) {
       const nextIdx = currentLevelIndex + 1;
       setCurrentLevelIndex(nextIdx);
+      StorageService.updateCampaignProgress(nextIdx);
       initBattle(CAMPAIGN_LEVELS[nextIdx], 'CAMPAIGN');
+    }
+  };
+
+  // Jump to specific campaign sector
+  const handleSelectLevel = (idx: number) => {
+    if (idx >= 0 && idx < CAMPAIGN_LEVELS.length) {
+      setCurrentLevelIndex(idx);
+      StorageService.updateCampaignProgress(idx);
+      initBattle(CAMPAIGN_LEVELS[idx], 'CAMPAIGN');
     }
   };
 
@@ -1429,7 +1455,12 @@ export default function App() {
           setGameStatus('VICTORY');
 
           const trophiesWon = activeLevel.rewardTrophies;
-          const updatedProfile = StorageService.addTrophies(trophiesWon, 25);
+          StorageService.addTrophies(trophiesWon, 25);
+          if (gameMode === 'CAMPAIGN') {
+            const nextUnlocked = Math.min(CAMPAIGN_LEVELS.length - 1, currentLevelIndex + 1);
+            StorageService.updateCampaignProgress(nextUnlocked);
+          }
+          const updatedProfile = StorageService.getProfile();
           setProfile(updatedProfile);
 
           if (gameMode === 'WORLD_RAID') {
@@ -1511,137 +1542,122 @@ export default function App() {
       <main className="flex-1 flex flex-col">
         {activeTab === 'GAME' && (
           <div className="flex-1 flex flex-col">
-            {/* Operational Tactical HUD with Auto Mode & Turn Skipping */}
+            {/* Top Tactical Status Bar */}
             <HUD
-              sun={sun}
-              currentTurn={currentTurn}
-              sunPulseInterval={gameMode === 'DAILY' ? dailyConfig.sunPulseInterval : activeLevel.sunPulseInterval}
-              sunPulseAmount={gameMode === 'DAILY' ? dailyConfig.sunPulseAmount : activeLevel.sunPulseAmount}
+              levelName={activeLevel.name}
+              sectorName={activeLevel.sectorName}
+              currentLevelIndex={currentLevelIndex}
+              totalLevels={CAMPAIGN_LEVELS.length}
+              onSelectLevel={handleSelectLevel}
               currentWave={currentWave}
               totalWaves={gameMode === 'DAILY' ? dailyConfig.totalWaves : activeLevel.totalWaves}
               turnPhase={turnPhase}
-              isShovelActive={isShovelActive}
               isFastSpeed={isFastSpeed}
               soundEnabled={soundEnabled}
               isAutoMode={isAutoMode}
               autoCountdown={autoCountdown}
               canSkipEmptyTurns={canSkipEmptyTurns}
               skipTurnsCount={skipTurnsCount}
-              onToggleShovel={() => {
-                setIsShovelActive((prev) => !prev);
-                setSelectedPlantId(null);
-              }}
               onToggleSpeed={() => setIsFastSpeed((prev) => !prev)}
               onToggleSound={toggleSound}
               onToggleAutoMode={() => setIsAutoMode((prev) => !prev)}
               onSkipEmptyTurns={handleSkipEmptyTurns}
-              onEndTurn={handleEndTurn}
-              onOpenAlmanac={() => setActiveTab('ALMANAC')}
-              onExitBattle={restartCurrentBattle}
+              onOpenChooseSeeds={() => setIsChoosingSeeds(true)}
+              onRestart={restartCurrentBattle}
             />
 
-            {/* Campaign Sector & Turn Phase Status Sub-Bar */}
-            <div className="bg-slate-900/60 border-b border-slate-800/80 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-400">
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-slate-200">
-                  {gameMode === 'CAMPAIGN'
-                    ? activeLevel.name
-                    : gameMode === 'DAILY'
-                    ? `Daily Challenge: ${dailyConfig.title}`
-                    : 'World Raid: Titan Assault'}
-                </span>
-                <span>·</span>
-                <span className="text-emerald-400">{activeLevel.sectorName}</span>
-
-                {gameMode === 'CAMPAIGN' && (
-                  <div className="hidden lg:flex items-center gap-1 ml-2">
-                    {CAMPAIGN_LEVELS.map((lvl, idx) => (
-                      <button
-                        key={lvl.id}
-                        type="button"
-                        onClick={() => {
-                          setCurrentLevelIndex(idx);
-                          initBattle(CAMPAIGN_LEVELS[idx], 'CAMPAIGN');
-                        }}
-                        className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
-                          currentLevelIndex === idx
-                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                        }`}
-                      >
-                        Sec {idx + 1}
-                      </button>
-                    ))}
+            {/* Tactical Battle Arena */}
+            <div className="flex-1 p-2 sm:p-4 flex flex-col items-center justify-center gap-3 max-w-6xl mx-auto w-full">
+              {/* Authentic Wooden PvZ Seed Bank Frame */}
+              <div className="w-full bg-stone-900 border-2 border-amber-900/80 rounded-2xl p-2 sm:p-2.5 shadow-2xl flex flex-wrap items-center justify-between gap-3 select-none">
+                {/* Left: Classic PvZ Sun Counter */}
+                <div className="flex items-center gap-2.5 px-3 py-1.5 bg-stone-950/90 border-2 border-amber-500/50 rounded-xl shadow-inner shrink-0">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center shadow-md shrink-0">
+                    <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-amber-950 fill-amber-950 animate-sun-spin" />
                   </div>
-                )}
-              </div>
+                  <div className="leading-none">
+                    <div className="text-[9px] uppercase font-black tracking-wider text-amber-400">
+                      SUN
+                    </div>
+                    <div className="text-lg sm:text-xl font-mono font-black text-amber-300 leading-tight">
+                      {sun}
+                    </div>
+                    <div className="text-[8px] sm:text-[9px] font-mono text-amber-400/80">
+                      +{gameMode === 'DAILY' ? dailyConfig.sunPulseAmount : activeLevel.sunPulseAmount} in {activeLevel.sunPulseInterval - ((currentTurn - 1) % activeLevel.sunPulseInterval)}T
+                    </div>
+                  </div>
+                </div>
 
-              <div className="flex items-center gap-3">
-                <span className="text-slate-300">
-                  Phase:{' '}
-                  <strong className="text-amber-400 font-bold uppercase">
-                    {turnPhase === 'PLAYER_INPUT' ? 'Player Action Phase' : 'Turn Resolution'}
-                  </strong>
-                </span>
+                {/* Center: Slotted Seed Packets Tray */}
+                <div className="flex-1 flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2 overflow-x-auto py-1 scrollbar-none">
+                  {availablePlantIds.map((pId, idx) => {
+                    const plantDef = PLANT_DEFINITIONS[pId];
+                    return (
+                      <SeedPacket
+                        key={pId}
+                        plant={plantDef}
+                        currentSun={sun}
+                        cooldownTurnsRemaining={plantCooldowns[pId] ?? 0}
+                        isSelected={selectedPlantId === pId && !isShovelActive}
+                        shortcutIndex={idx + 1}
+                        onSelect={() => {
+                          setSelectedPlantId(pId);
+                          setIsShovelActive(false);
+                        }}
+                        disabled={turnPhase !== 'PLAYER_INPUT'}
+                      />
+                    );
+                  })}
+                </div>
 
-                {!canAffordAnyPlant && turnPhase === 'PLAYER_INPUT' && gameStatus === 'PLAYING' && (
-                  <span className="text-amber-400 font-bold animate-pulse">
-                    [Zero Sun / Recharging - Auto Skipping]
-                  </span>
-                )}
+                {/* Right: Shovel Slot & Primary End Turn Action */}
+                <div className="flex items-center gap-2 shrink-0">
+                  {/* Shovel Slot */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsShovelActive((prev) => !prev);
+                      setSelectedPlantId(null);
+                    }}
+                    disabled={turnPhase !== 'PLAYER_INPUT'}
+                    title="Shovel Tool [S]: Dig up a plant or clear a tombstone"
+                    className={`p-2 sm:p-2.5 rounded-xl border-2 transition-all flex flex-col items-center justify-center shadow-md cursor-pointer ${
+                      isShovelActive
+                        ? 'bg-amber-600 border-amber-300 text-white shadow-amber-900/50 scale-105 ring-2 ring-amber-400'
+                        : 'bg-stone-950/80 border-stone-800 text-stone-300 hover:text-white hover:border-stone-600'
+                    }`}
+                  >
+                    <Shovel className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="text-[9px] font-mono font-bold mt-0.5">[S]</span>
+                  </button>
 
-                {isAutoMode && canAffordAnyPlant && (
-                  <span className="text-emerald-400 font-bold">
-                    [Auto in {autoCountdown}s{isFastSpeed ? ' (2x)' : ''}]
-                  </span>
-                )}
-
-                <span className="hidden sm:inline">·</span>
-                <span className="hidden sm:inline text-slate-400">
-                  Hotkeys: [1-8] Plants · [Space] End Turn · [S] Shovel
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsChoosingSeeds(true)}
-                  title="Choose Seeds: Select up to 8 seeds for battle"
-                  className="px-2.5 py-0.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 hover:text-white rounded border border-emerald-600/60 transition-colors flex items-center gap-1 text-[11px] font-bold cursor-pointer"
-                >
-                  <span>Choose Seeds</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={restartCurrentBattle}
-                  title="Restart Sector Battle"
-                  className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded border border-slate-700 transition-colors flex items-center gap-1 text-[11px] cursor-pointer"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                  <span>Restart</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Tactical Battle Arena & Conveyor Belt */}
-            <div className="flex-1 p-3 sm:p-6 flex flex-col items-center justify-center gap-4 max-w-6xl mx-auto w-full">
-              {/* Seed Packets Conveyor Dock (Active 8 Seeds from Choose Your Seeds) */}
-              <div className="w-full flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-1 px-2 scrollbar-thin">
-                {availablePlantIds.map((pId, idx) => {
-                  const plantDef = PLANT_DEFINITIONS[pId];
-                  return (
-                    <SeedPacket
-                      key={pId}
-                      plant={plantDef}
-                      currentSun={sun}
-                      cooldownTurnsRemaining={plantCooldowns[pId] ?? 0}
-                      isSelected={selectedPlantId === pId && !isShovelActive}
-                      shortcutIndex={idx + 1}
-                      onSelect={() => {
-                        setSelectedPlantId(pId);
-                        setIsShovelActive(false);
-                      }}
-                      disabled={turnPhase !== 'PLAYER_INPUT'}
-                    />
-                  );
-                })}
+                  {/* Big Arcade/Game Styled End Turn Button */}
+                  <button
+                    type="button"
+                    onClick={handleEndTurn}
+                    disabled={turnPhase !== 'PLAYER_INPUT'}
+                    className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-black text-xs sm:text-sm tracking-wide uppercase transition-all shadow-xl flex items-center gap-2 select-none border-2 cursor-pointer ${
+                      turnPhase !== 'PLAYER_INPUT'
+                        ? 'bg-stone-800 border-stone-700 text-stone-500 cursor-wait'
+                        : !canAffordAnyPlant
+                        ? 'bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 border-amber-300 text-stone-950 animate-pulse shadow-amber-950/50 active:scale-95'
+                        : 'bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 border-emerald-300 text-white shadow-emerald-950/50 active:scale-95'
+                    }`}
+                  >
+                    {turnPhase !== 'PLAYER_INPUT' ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-stone-400 border-t-transparent rounded-full animate-spin" />
+                        <span>Resolving</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-4 h-4 fill-current" />
+                        <span>End Turn</span>
+                        <span className="hidden sm:inline text-[10px] font-mono opacity-80">[Space]</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
               {/* 5x8 Fast Tactical Lawn with Dynamic Hazards & Discrete Movement */}
@@ -1712,7 +1728,17 @@ export default function App() {
         profile={profile}
         isOpen={isCloudModalOpen}
         onClose={() => setIsCloudModalOpen(false)}
-        onProfileUpdated={(updated) => setProfile(updated)}
+        onProfileUpdated={(updated) => {
+          setProfile(updated);
+          if (updated.campaignLevelIndex !== undefined && updated.campaignLevelIndex !== currentLevelIndex) {
+            const nextLvl = Math.min(CAMPAIGN_LEVELS.length - 1, Math.max(0, updated.campaignLevelIndex));
+            setCurrentLevelIndex(nextLvl);
+            initBattle(CAMPAIGN_LEVELS[nextLvl], 'CAMPAIGN');
+          }
+          if (updated.selectedDeck && updated.selectedDeck.length > 0) {
+            setSelectedDeck(updated.selectedDeck);
+          }
+        }}
       />
 
       {/* Game Over Victory / Defeat Modal */}
