@@ -5,244 +5,476 @@
 
 export const SVG_PLANTS: Record<string, string> = {
   sunflower: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 50 65 Q 48 85 50 95" stroke="#16a34a" stroke-width="6" fill="none" stroke-linecap="round" />
-      <path d="M 49 78 Q 28 80 25 70 Q 36 68 49 76" fill="#22c55e" stroke="#15803d" stroke-width="2" />
-      <path d="M 51 82 Q 72 84 75 74 Q 64 72 51 80" fill="#22c55e" stroke="#15803d" stroke-width="2" />
-      <g style="transform-origin: 50px 48px;">
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(0 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(30 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(60 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(90 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(120 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(150 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(180 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(210 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(240 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(270 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(300 50 48)" />
-        <ellipse cx="50" cy="20" rx="7" ry="14" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(330 50 48)" />
-      </g>
-      <circle cx="50" cy="48" r="21" fill="#78350f" stroke="#451a03" stroke-width="3" />
-      <circle cx="50" cy="48" r="19" fill="#92400e" />
-      <ellipse cx="43" cy="45" rx="3.5" ry="5.5" fill="#0f172a" />
-      <ellipse cx="57" cy="45" rx="3.5" ry="5.5" fill="#0f172a" />
-      <circle cx="44.5" cy="43.5" r="1.5" fill="#ffffff" />
-      <circle cx="58.5" cy="43.5" r="1.5" fill="#ffffff" />
-      <circle cx="38" cy="52" r="3" fill="#f87171" opacity="0.6" />
-      <circle cx="62" cy="52" r="3" fill="#f87171" opacity="0.6" />
-      <path d="M 44 53 Q 50 60 56 53" stroke="#fef08a" stroke-width="2.5" fill="none" stroke-linecap="round" />
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <path d="M 50 62 Q 47 78 50 92" stroke="#15803d" stroke-width="6" fill="none" stroke-linecap="round" />
+  <path d="M 49 76 C 30 76 22 84 18 78 C 22 68 36 68 48 74 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" stroke-linejoin="round" />
+  <path d="M 24 74 Q 36 73 48 74" stroke="#15803d" stroke-width="1.5" fill="none" />
+  <path d="M 51 80 C 70 80 78 88 82 82 C 78 72 64 72 52 78 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" stroke-linejoin="round" />
+  <path d="M 76 78 Q 64 77 52 78" stroke="#15803d" stroke-width="1.5" fill="none" />
+  <path d="M 44 64 Q 50 68 56 64 Q 50 61 44 64 Z" fill="#16a34a" stroke="#15803d" stroke-width="1.5" />
+  <g transform="translate(50, 44)">
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(11.25)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(33.75)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(56.25)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(78.75)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(101.25)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(123.75)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(146.25)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(168.75)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(191.25)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(213.75)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(236.25)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(258.75)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(281.25)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(303.75)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(326.25)" />
+    <ellipse cx="0" cy="-28" rx="7.5" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="2" transform="rotate(348.75)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(0)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(22.5)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(45)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(67.5)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(90)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(112.5)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(135)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(157.5)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(180)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(202.5)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(225)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(247.5)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(270)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(292.5)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(315)" />
+    <ellipse cx="0" cy="-27" rx="8" ry="13.5" fill="#facc15" stroke="#eab308" stroke-width="2" transform="rotate(337.5)" />
+  </g>
+  <circle cx="50" cy="44" r="22" fill="#5c2d11" stroke="#361805" stroke-width="3" />
+  <circle cx="50" cy="44" r="20" fill="#78350f" />
+  <path d="M 33 34 C 40 26 60 26 67 34 C 62 28 38 28 33 34 Z" fill="#92400e" opacity="0.6" />
+  <ellipse cx="43" cy="41" rx="4" ry="6.5" fill="#0f172a" />
+  <ellipse cx="57" cy="41" rx="4" ry="6.5" fill="#0f172a" />
+  <circle cx="44.5" cy="39" r="1.8" fill="#ffffff" />
+  <circle cx="58.5" cy="39" r="1.8" fill="#ffffff" />
+  <circle cx="41.8" cy="43.5" r="0.8" fill="#ffffff" />
+  <circle cx="55.8" cy="43.5" r="0.8" fill="#ffffff" />
+  <path d="M 43 49 C 43 56 57 56 57 49 Z" fill="#240c02" stroke="#361805" stroke-width="1.8" stroke-linejoin="round" />
+  <path d="M 46 51 C 48 54 52 54 54 51 C 52 53.5 48 53.5 46 51 Z" fill="#ef4444" />
+</svg>
   `,
-
   peashooter: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 45 65 Q 40 85 45 95" stroke="#16a34a" stroke-width="6" fill="none" stroke-linecap="round" />
-      <path d="M 44 80 Q 20 85 18 72 Q 32 70 44 78" fill="#22c55e" stroke="#15803d" stroke-width="2" />
-      <path d="M 46 84 Q 70 88 72 75 Q 58 73 46 82" fill="#22c55e" stroke="#15803d" stroke-width="2" />
-      <path d="M 32 40 Q 15 28 22 20 Q 35 25 36 38" fill="#22c55e" stroke="#15803d" stroke-width="2" />
-      <circle cx="45" cy="45" r="22" fill="#4ade80" stroke="#16a34a" stroke-width="3" />
-      <ellipse cx="68" cy="45" rx="14" ry="10" fill="#22c55e" stroke="#15803d" stroke-width="3" />
-      <ellipse cx="73" cy="45" rx="5" ry="8" fill="#14532d" />
-      <circle cx="44" cy="38" r="6" fill="#ffffff" stroke="#166534" stroke-width="1.5" />
-      <circle cx="46" cy="38" r="3" fill="#0f172a" />
-      <circle cx="47" cy="37" r="1" fill="#ffffff" />
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <path d="M 46 60 Q 40 76 46 90" stroke="#15803d" stroke-width="6.5" fill="none" stroke-linecap="round" />
+  <path d="M 46 86 C 30 84 20 90 14 84 C 20 76 34 78 44 84 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" stroke-linejoin="round" />
+  <path d="M 46 88 C 62 86 72 92 78 86 C 72 78 58 80 48 86 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" stroke-linejoin="round" />
+  <path d="M 42 88 C 34 94 28 98 22 96 C 24 90 34 88 42 88 Z" fill="#16a34a" stroke="#15803d" stroke-width="2" />
+  <path d="M 50 88 C 58 94 64 98 70 96 C 68 90 58 88 50 88 Z" fill="#16a34a" stroke="#15803d" stroke-width="2" />
+  <path d="M 30 38 C 12 28 14 16 22 14 C 32 18 36 28 34 38 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.8" stroke-linejoin="round" />
+  <path d="M 18 16 Q 26 24 32 34" stroke="#15803d" stroke-width="1.5" fill="none" />
+  <circle cx="44" cy="42" r="22" fill="#4ade80" stroke="#15803d" stroke-width="3" />
+  <path d="M 28 32 C 34 24 48 24 54 30 C 46 25 32 26 28 32 Z" fill="#86efac" opacity="0.6" />
+  <path d="M 58 35 L 70 33 L 70 51 L 58 49 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" />
+  <ellipse cx="70" cy="42" rx="6" ry="10" fill="#22c55e" stroke="#15803d" stroke-width="3" />
+  <ellipse cx="72" cy="42" rx="3.5" ry="7.5" fill="#14532d" />
+  <circle cx="44" cy="34" r="6.5" fill="#ffffff" stroke="#15803d" stroke-width="1.8" />
+  <circle cx="46" cy="34" r="3.4" fill="#0f172a" />
+  <circle cx="47.5" cy="32.5" r="1.3" fill="#ffffff" />
+  <circle cx="44.5" cy="35.5" r="0.6" fill="#ffffff" />
+  <ellipse cx="34" cy="31" rx="3" ry="4" fill="#ffffff" stroke="#15803d" stroke-width="1.5" />
+  <circle cx="34.5" cy="31" r="1.8" fill="#0f172a" />
+  <circle cx="35" cy="30" r="0.7" fill="#ffffff" />
+</svg>
   `,
-
   wallnut: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="50" cy="92" rx="28" ry="6" fill="#1e293b" opacity="0.4" />
-      <path d="M 50 12 C 72 12 80 40 78 70 C 76 90 64 92 50 92 C 36 92 24 90 22 70 C 20 40 28 12 50 12 Z" fill="#b45309" stroke="#78350f" stroke-width="3.5" />
-      <path d="M 50 15 C 68 15 76 42 74 68 C 72 86 62 88 50 88 C 38 88 28 86 26 68 C 24 42 32 15 50 15 Z" fill="#d97706" opacity="0.4" />
-      <ellipse cx="40" cy="42" rx="6" ry="8" fill="#ffffff" stroke="#78350f" stroke-width="1.5" />
-      <circle cx="42" cy="42" r="3.5" fill="#0f172a" />
-      <circle cx="43" cy="40" r="1.2" fill="#ffffff" />
-      <ellipse cx="60" cy="42" rx="6" ry="8" fill="#ffffff" stroke="#78350f" stroke-width="1.5" />
-      <circle cx="62" cy="42" r="3.5" fill="#0f172a" />
-      <circle cx="63" cy="40" r="1.2" fill="#ffffff" />
-      <path d="M 44 65 Q 50 69 56 65" stroke="#78350f" stroke-width="2.5" fill="none" stroke-linecap="round" />
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <ellipse cx="50" cy="94" rx="28" ry="6" fill="#1e293b" opacity="0.4" />
+  <path d="M 50 10 C 72 10 82 35 80 68 C 78 88 66 94 50 94 C 34 94 22 88 20 68 C 18 35 28 10 50 10 Z" fill="#a16207" stroke="#5c2d11" stroke-width="3.5" stroke-linejoin="round" />
+  <path d="M 50 13 C 68 13 76 36 74 66 C 72 84 62 90 50 90 C 38 90 28 84 26 66 C 24 36 32 13 50 13 Z" fill="#b45309" />
+  <path d="M 48 15 C 62 15 70 34 68 56 C 62 30 40 20 30 38 C 30 22 38 15 48 15 Z" fill="#d97706" opacity="0.45" />
+  <path d="M 28 50 Q 24 64 28 74" stroke="#5c2d11" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5" />
+  <path d="M 72 48 Q 76 62 72 72" stroke="#5c2d11" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5" />
+  <path d="M 50 12 Q 49 22 51 28" stroke="#5c2d11" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4" />
+  <path d="M 33 34 Q 42 30 48 35" stroke="#5c2d11" stroke-width="2.2" fill="none" stroke-linecap="round" />
+  <path d="M 54 35 Q 60 30 69 34" stroke="#5c2d11" stroke-width="2.2" fill="none" stroke-linecap="round" />
+  <ellipse cx="40" cy="44" rx="7" ry="9" fill="#ffffff" stroke="#5c2d11" stroke-width="2" />
+  <ellipse cx="43" cy="44" rx="4" ry="4.5" fill="#0f172a" />
+  <circle cx="44.5" cy="42" r="1.5" fill="#ffffff" />
+  <circle cx="41.5" cy="46" r="0.7" fill="#ffffff" />
+  <ellipse cx="61" cy="44" rx="7" ry="9" fill="#ffffff" stroke="#5c2d11" stroke-width="2" />
+  <ellipse cx="64" cy="44" rx="4" ry="4.5" fill="#0f172a" />
+  <circle cx="65.5" cy="42" r="1.5" fill="#ffffff" />
+  <circle cx="62.5" cy="46" r="0.7" fill="#ffffff" />
+  <path d="M 44 65 Q 50 70 57 65" stroke="#5c2d11" stroke-width="2.8" fill="none" stroke-linecap="round" />
+</svg>
   `,
-
   snowpea: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 45 65 Q 40 85 45 95" stroke="#0284c7" stroke-width="6" fill="none" stroke-linecap="round" />
-      <path d="M 44 80 Q 20 85 18 72 Q 32 70 44 78" fill="#38bdf8" stroke="#0284c7" stroke-width="2" />
-      <path d="M 46 84 Q 70 88 72 75 Q 58 73 46 82" fill="#38bdf8" stroke="#0284c7" stroke-width="2" />
-      <polygon points="26,38 12,22 28,18" fill="#7dd3fc" stroke="#0284c7" stroke-width="2" />
-      <polygon points="34,28 24,10 38,8" fill="#bae6fd" stroke="#0284c7" stroke-width="2" />
-      <circle cx="45" cy="45" r="22" fill="#38bdf8" stroke="#0284c7" stroke-width="3" />
-      <ellipse cx="68" cy="45" rx="14" ry="10" fill="#0284c7" stroke="#0369a1" stroke-width="3" />
-      <ellipse cx="73" cy="45" rx="5" ry="8" fill="#082f49" />
-      <circle cx="44" cy="38" r="6" fill="#ffffff" stroke="#0369a1" stroke-width="1.5" />
-      <circle cx="46" cy="38" r="3" fill="#082f49" />
-      <circle cx="47" cy="37" r="1" fill="#ffffff" />
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <path d="M 46 60 Q 40 76 46 90" stroke="#0369a1" stroke-width="6.5" fill="none" stroke-linecap="round" />
+  <path d="M 46 86 C 30 84 20 90 14 84 C 20 76 34 78 44 84 Z" fill="#38bdf8" stroke="#0369a1" stroke-width="2.5" stroke-linejoin="round" />
+  <path d="M 46 88 C 62 86 72 92 78 86 C 72 78 58 80 48 86 Z" fill="#38bdf8" stroke="#0369a1" stroke-width="2.5" stroke-linejoin="round" />
+  <path d="M 42 88 C 34 94 28 98 22 96 C 24 90 34 88 42 88 Z" fill="#0284c7" stroke="#0369a1" stroke-width="2" />
+  <path d="M 50 88 C 58 94 64 98 70 96 C 68 90 58 88 50 88 Z" fill="#0284c7" stroke="#0369a1" stroke-width="2" />
+  <polygon points="28,34 8,24 24,18" fill="#7dd3fc" stroke="#0284c7" stroke-width="2" stroke-linejoin="round" />
+  <polygon points="34,26 18,10 32,8" fill="#bae6fd" stroke="#0284c7" stroke-width="2" stroke-linejoin="round" />
+  <polygon points="40,20 28,-2 42,-4" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" stroke-linejoin="round" />
+  <polygon points="26,42 10,40 24,48" fill="#38bdf8" stroke="#0284c7" stroke-width="2" stroke-linejoin="round" />
+  <polygon points="32,48 18,52 30,56" fill="#0284c7" stroke="#0369a1" stroke-width="1.8" stroke-linejoin="round" />
+  <circle cx="44" cy="42" r="22" fill="#38bdf8" stroke="#0284c7" stroke-width="3" />
+  <path d="M 28 32 C 34 24 48 24 54 30 C 46 25 32 26 28 32 Z" fill="#bae6fd" opacity="0.6" />
+  <path d="M 58 35 L 70 33 L 70 51 L 58 49 Z" fill="#0284c7" stroke="#0369a1" stroke-width="2.5" />
+  <ellipse cx="70" cy="42" rx="6" ry="10" fill="#0284c7" stroke="#0369a1" stroke-width="3" />
+  <ellipse cx="72" cy="42" rx="3.5" ry="7.5" fill="#082f49" />
+  <circle cx="44" cy="34" r="6.5" fill="#ffffff" stroke="#0369a1" stroke-width="1.8" />
+  <circle cx="46" cy="34" r="3.4" fill="#082f49" />
+  <circle cx="47.5" cy="32.5" r="1.3" fill="#ffffff" />
+  <circle cx="44.5" cy="35.5" r="0.6" fill="#ffffff" />
+  <ellipse cx="34" cy="31" rx="3" ry="4" fill="#ffffff" stroke="#0369a1" stroke-width="1.5" />
+  <circle cx="34.5" cy="31" r="1.8" fill="#082f49" />
+  <circle cx="35" cy="30" r="0.7" fill="#ffffff" />
+</svg>
   `,
-
   repeater: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 45 65 Q 40 85 45 95" stroke="#15803d" stroke-width="6" fill="none" stroke-linecap="round" />
-      <path d="M 44 80 Q 20 85 18 72 Q 32 70 44 78" fill="#16a34a" stroke="#166534" stroke-width="2" />
-      <path d="M 46 84 Q 70 88 72 75 Q 58 73 46 82" fill="#16a34a" stroke="#166534" stroke-width="2" />
-      <path d="M 32 38 Q 12 25 18 16 Q 30 20 34 32" fill="#15803d" stroke="#166534" stroke-width="2" />
-      <path d="M 36 30 Q 22 14 30 8 Q 40 12 40 26" fill="#22c55e" stroke="#15803d" stroke-width="2" />
-      <circle cx="45" cy="45" r="22" fill="#22c55e" stroke="#166534" stroke-width="3" />
-      <ellipse cx="68" cy="45" rx="16" ry="11" fill="#16a34a" stroke="#166534" stroke-width="3" />
-      <ellipse cx="75" cy="45" rx="5" ry="9" fill="#14532d" />
-      <circle cx="44" cy="38" r="6" fill="#ffffff" stroke="#166534" stroke-width="1.5" />
-      <circle cx="46" cy="38" r="3" fill="#0f172a" />
-      <circle cx="47" cy="37" r="1" fill="#ffffff" />
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <path d="M 46 60 Q 40 76 46 90" stroke="#14532d" stroke-width="6.5" fill="none" stroke-linecap="round" />
+  <path d="M 46 86 C 30 84 20 90 14 84 C 20 76 34 78 44 84 Z" fill="#15803d" stroke="#14532d" stroke-width="2.5" stroke-linejoin="round" />
+  <path d="M 46 88 C 62 86 72 92 78 86 C 72 78 58 80 48 86 Z" fill="#15803d" stroke="#14532d" stroke-width="2.5" stroke-linejoin="round" />
+  <!-- Two swept back leaves -->
+  <path d="M 28 34 C 10 24 12 12 20 10 C 28 14 34 24 32 34 Z" fill="#16a34a" stroke="#14532d" stroke-width="2.5" stroke-linejoin="round" />
+  <path d="M 32 44 C 12 36 10 24 18 20 C 28 24 36 34 34 44 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" stroke-linejoin="round" />
+  <circle cx="44" cy="42" r="22" fill="#16a34a" stroke="#14532d" stroke-width="3" />
+  <path d="M 28 32 C 34 24 48 24 54 30 C 46 25 32 26 28 32 Z" fill="#4ade80" opacity="0.5" />
+  <path d="M 58 34 L 72 32 L 72 52 L 58 50 Z" fill="#15803d" stroke="#14532d" stroke-width="2.5" />
+  <ellipse cx="72" cy="42" rx="6.5" ry="11" fill="#15803d" stroke="#14532d" stroke-width="3" />
+  <ellipse cx="74" cy="42" rx="4" ry="8" fill="#052e16" />
+  <!-- Determined Eyebrow -->
+  <path d="M 36 27 L 52 32" stroke="#14532d" stroke-width="3" stroke-linecap="round" />
+  <circle cx="44" cy="35" r="6.5" fill="#ffffff" stroke="#14532d" stroke-width="1.8" />
+  <circle cx="46" cy="35" r="3.4" fill="#0f172a" />
+  <circle cx="47.5" cy="33.5" r="1.3" fill="#ffffff" />
+</svg>
   `,
-
   cherrybomb: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 36 45 C 38 20 62 20 64 45" stroke="#15803d" stroke-width="4" fill="none" />
-      <path d="M 50 20 L 50 8" stroke="#ca8a04" stroke-width="3" stroke-dasharray="3 2" />
-      <circle cx="50" cy="6" r="4.5" fill="#facc15" />
-      <circle cx="50" cy="6" r="3" fill="#ef4444" />
-      <circle cx="36" cy="58" r="18" fill="#dc2626" stroke="#991b1b" stroke-width="3" />
-      <circle cx="30" cy="52" r="3" fill="#ffffff" opacity="0.6" />
-      <path d="M 28 50 L 38 54" stroke="#450a0a" stroke-width="2.5" />
-      <circle cx="33" cy="56" r="2.5" fill="#0f172a" />
-      <circle cx="64" cy="58" r="18" fill="#dc2626" stroke="#991b1b" stroke-width="3" />
-      <circle cx="58" cy="52" r="3" fill="#ffffff" opacity="0.6" />
-      <path d="M 72 50 L 62 54" stroke="#450a0a" stroke-width="2.5" />
-      <circle cx="67" cy="56" r="2.5" fill="#0f172a" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <!-- Green Y-stem -->
+  <path d="M 34 48 C 36 28 48 18 50 16 C 52 18 64 28 66 48" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round" />
+  <!-- Burning Sputtering Fuse -->
+  <path d="M 50 16 Q 48 8 50 4" stroke="#ca8a04" stroke-width="3" stroke-dasharray="2 1" fill="none" />
+  <circle cx="50" cy="3" r="5" fill="#facc15" />
+  <circle cx="50" cy="3" r="3" fill="#ef4444" />
+  <path d="M 44 1 L 46 3 M 54 1 L 52 3 M 50 -2 L 50 1" stroke="#fef08a" stroke-width="1.5" stroke-linecap="round" />
 
+  <!-- Left Cherry (slightly back) -->
+  <g>
+    <circle cx="34" cy="58" r="19" fill="#dc2626" stroke="#7f1d1d" stroke-width="3" />
+    <circle cx="28" cy="50" r="4" fill="#ffffff" opacity="0.4" />
+    <!-- Angry Eyes & Brow -->
+    <path d="M 24 50 L 36 55" stroke="#450a0a" stroke-width="2.5" stroke-linecap="round" />
+    <circle cx="30" cy="57" r="3" fill="#0f172a" />
+    <circle cx="31" cy="56" r="1" fill="#ffffff" />
+    <!-- Gritting Teeth / Grimace -->
+    <path d="M 26 66 Q 34 62 40 67" stroke="#450a0a" stroke-width="2.5" fill="none" stroke-linecap="round" />
+  </g>
+
+  <!-- Right Cherry (front & furious) -->
+  <g>
+    <circle cx="64" cy="60" r="20" fill="#ef4444" stroke="#7f1d1d" stroke-width="3" />
+    <circle cx="58" cy="51" r="4.5" fill="#ffffff" opacity="0.45" />
+    <!-- Furrowed Angry Brow -->
+    <path d="M 74 51 L 60 56" stroke="#450a0a" stroke-width="3" stroke-linecap="round" />
+    <circle cx="65" cy="58" r="3.5" fill="#0f172a" />
+    <circle cx="66" cy="57" r="1.2" fill="#ffffff" />
+    <!-- Gritted Teeth -->
+    <rect x="56" y="67" width="14" height="6" rx="2" fill="#ffffff" stroke="#450a0a" stroke-width="1.5" />
+    <line x1="60" y1="67" x2="60" y2="73" stroke="#450a0a" stroke-width="1" />
+    <line x1="65" y1="67" x2="65" y2="73" stroke="#450a0a" stroke-width="1" />
+  </g>
+</svg>
+  `,
   potatomine: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="50" cy="85" rx="35" ry="12" fill="#78350f" stroke="#451a03" stroke-width="3" />
-      <ellipse cx="50" cy="65" rx="26" ry="22" fill="#b45309" stroke="#78350f" stroke-width="3" />
-      <ellipse cx="50" cy="60" rx="20" ry="16" fill="#d97706" opacity="0.4" />
-      <path d="M 50 43 L 50 22" stroke="#475569" stroke-width="4" stroke-linecap="round" />
-      <circle cx="50" cy="18" r="7" fill="#ef4444" stroke="#991b1b" stroke-width="2" />
-      <circle cx="52" cy="16" r="2" fill="#ffffff" />
-      <circle cx="42" cy="62" r="4.5" fill="#0f172a" />
-      <circle cx="43" cy="60" r="1.5" fill="#ffffff" />
-      <circle cx="58" cy="62" r="4.5" fill="#0f172a" />
-      <circle cx="59" cy="60" r="1.5" fill="#ffffff" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <!-- Dirt Mound Base with clods -->
+  <ellipse cx="50" cy="85" rx="36" ry="12" fill="#78350f" stroke="#451a03" stroke-width="3" />
+  <polygon points="18,85 24,78 30,86" fill="#92400e" stroke="#451a03" stroke-width="1.5" />
+  <polygon points="70,86 76,78 82,85" fill="#92400e" stroke="#451a03" stroke-width="1.5" />
+  <polygon points="42,88 48,82 54,88" fill="#b45309" />
 
+  <!-- Chunky Potato Body -->
+  <path d="M 50 38 C 68 38 74 52 72 74 C 70 86 62 88 50 88 C 38 88 30 86 28 74 C 26 52 32 38 50 38 Z" fill="#b45309" stroke="#78350f" stroke-width="3" />
+  <path d="M 48 40 C 62 40 68 52 66 70 C 62 50 40 45 32 58 C 30 48 36 40 48 40 Z" fill="#d97706" opacity="0.45" />
+
+  <!-- Antenna Rod & Bright Blinking Red Bulb -->
+  <line x1="50" y1="38" x2="50" y2="18" stroke="#475569" stroke-width="4" stroke-linecap="round" />
+  <circle cx="50" cy="14" r="8" fill="#ef4444" stroke="#991b1b" stroke-width="2.5" />
+  <circle cx="53" cy="12" r="2.5" fill="#ffffff" />
+  <!-- Yellow glow aura -->
+  <circle cx="50" cy="14" r="12" fill="none" stroke="#facc15" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.75" />
+
+  <!-- Cute Big Eyes looking up eagerly -->
+  <ellipse cx="40" cy="62" rx="5" ry="6.5" fill="#ffffff" stroke="#78350f" stroke-width="1.8" />
+  <circle cx="41" cy="61" r="3" fill="#0f172a" />
+  <circle cx="42.5" cy="59.5" r="1.2" fill="#ffffff" />
+  <ellipse cx="60" cy="62" rx="5" ry="6.5" fill="#ffffff" stroke="#78350f" stroke-width="1.8" />
+  <circle cx="61" cy="61" r="3" fill="#0f172a" />
+  <circle cx="62.5" cy="59.5" r="1.2" fill="#ffffff" />
+
+  <!-- Cute little mouth -->
+  <path d="M 46 74 Q 50 78 54 74" stroke="#78350f" stroke-width="2.2" fill="none" stroke-linecap="round" />
+</svg>
+  `,
   chomper: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 45 65 Q 40 85 45 95" stroke="#15803d" stroke-width="6" fill="none" stroke-linecap="round" />
-      <path d="M 44 80 Q 20 85 18 72 Q 32 70 44 78" fill="#16a34a" stroke="#15803d" stroke-width="2" />
-      <path d="M 46 84 Q 70 88 72 75 Q 58 73 46 82" fill="#16a34a" stroke="#15803d" stroke-width="2" />
-      <path d="M 30 25 C 60 10 85 20 85 45 C 85 55 70 65 50 65 C 30 65 20 50 30 25 Z" fill="#7e22ce" stroke="#581c87" stroke-width="3" />
-      <ellipse cx="65" cy="45" rx="18" ry="12" fill="#3b0764" />
-      <polygon points="52,36 56,44 60,36" fill="#ffffff" />
-      <polygon points="62,36 66,44 70,36" fill="#ffffff" />
-      <polygon points="72,36 76,44 80,36" fill="#ffffff" />
-      <polygon points="52,54 56,46 60,54" fill="#ffffff" />
-      <polygon points="62,54 66,46 70,54" fill="#ffffff" />
-      <polygon points="72,54 76,46 80,54" fill="#ffffff" />
-      <circle cx="42" cy="28" r="4" fill="#facc15" stroke="#a16207" stroke-width="1.5" />
-      <circle cx="43" cy="28" r="2" fill="#0f172a" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <!-- Thick green stem with spikes -->
+  <path d="M 44 60 Q 38 78 44 92" stroke="#15803d" stroke-width="7" fill="none" stroke-linecap="round" />
+  <path d="M 38 88 C 22 86 16 92 12 86 C 18 78 30 80 40 86 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" />
+  <path d="M 48 88 C 64 86 70 92 76 86 C 70 78 58 80 48 86 Z" fill="#22c55e" stroke="#15803d" stroke-width="2.5" />
 
+  <!-- Big Purple Flytrap Head: Upper & Lower Jaws -->
+  <g>
+    <!-- Upper Cranium & Jaw -->
+    <path d="M 26 30 C 30 10 70 8 78 28 C 80 38 68 44 48 44 C 30 44 24 38 26 30 Z" fill="#7e22ce" stroke="#4c1d95" stroke-width="3" stroke-linejoin="round" />
+    <!-- Lower Jaw Drooping Down -->
+    <path d="M 32 44 C 36 64 68 64 74 48 C 60 52 46 52 32 44 Z" fill="#6b21a8" stroke="#4c1d95" stroke-width="3" stroke-linejoin="round" />
+    
+    <!-- Fleshy Green Lips -->
+    <path d="M 28 42 Q 54 48 76 38" stroke="#22c55e" stroke-width="3.5" fill="none" stroke-linecap="round" />
+    <path d="M 32 46 Q 52 56 74 46" stroke="#22c55e" stroke-width="3.5" fill="none" stroke-linecap="round" />
+
+    <!-- Dark Red/Burgundy Mouth Interior with Sharp White Teeth -->
+    <polygon points="36,43 40,36 44,43" fill="#ffffff" />
+    <polygon points="46,43 50,35 54,43" fill="#ffffff" />
+    <polygon points="56,43 60,36 64,43" fill="#ffffff" />
+    <polygon points="66,41 70,35 74,40" fill="#ffffff" />
+    
+    <polygon points="38,47 42,53 46,47" fill="#ffffff" />
+    <polygon points="48,48 52,55 56,48" fill="#ffffff" />
+    <polygon points="58,47 62,54 66,47" fill="#ffffff" />
+
+    <!-- Cute little yellow eyes on top -->
+    <circle cx="44" cy="20" r="4.5" fill="#facc15" stroke="#a16207" stroke-width="1.8" />
+    <circle cx="45" cy="20" r="2.2" fill="#0f172a" />
+    <circle cx="46" cy="19" r="0.8" fill="#ffffff" />
+  </g>
+</svg>
+  `,
   squash: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="50" cy="90" rx="30" ry="6" fill="#1e293b" opacity="0.4" />
-      <path d="M 40 22 C 35 30 30 50 25 70 C 20 85 35 92 50 92 C 65 92 80 85 75 70 C 70 50 65 30 60 22 C 55 18 45 18 40 22 Z" fill="#22c55e" stroke="#15803d" stroke-width="3" />
-      <path d="M 48 20 Q 50 10 55 8" stroke="#166534" stroke-width="4" fill="none" stroke-linecap="round" />
-      <path d="M 34 46 L 46 50" stroke="#14532d" stroke-width="3.5" stroke-linecap="round" />
-      <path d="M 66 46 L 54 50" stroke="#14532d" stroke-width="3.5" stroke-linecap="round" />
-      <circle cx="40" cy="56" r="5" fill="#ffffff" stroke="#14532d" stroke-width="1.5" />
-      <circle cx="42" cy="56" r="2.5" fill="#0f172a" />
-      <circle cx="60" cy="56" r="5" fill="#ffffff" stroke="#14532d" stroke-width="1.5" />
-      <circle cx="58" cy="56" r="2.5" fill="#0f172a" />
-      <path d="M 44 72 Q 50 68 56 72" stroke="#14532d" stroke-width="3" fill="none" stroke-linecap="round" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <ellipse cx="50" cy="94" rx="30" ry="5.5" fill="#1e293b" opacity="0.4" />
+  <!-- Twisted Stem on top -->
+  <path d="M 48 18 Q 50 6 58 4 Q 56 12 52 18 Z" fill="#15803d" stroke="#14532d" stroke-width="2" />
+  
+  <!-- Plump Bell Squash Body -->
+  <path d="M 42 18 C 34 26 28 46 22 70 C 18 86 32 94 50 94 C 68 94 82 86 78 70 C 72 46 66 26 58 18 C 52 14 48 14 42 18 Z" fill="#22c55e" stroke="#15803d" stroke-width="3.5" stroke-linejoin="round" />
+  <path d="M 44 20 C 38 28 32 48 26 70 C 24 82 34 88 50 88 C 40 86 32 76 34 60 C 36 44 42 26 44 20 Z" fill="#4ade80" opacity="0.4" />
 
+  <!-- Iconic Heavy Furrowed Eyebrow Ridges -->
+  <path d="M 32 44 Q 44 49 48 46" stroke="#14532d" stroke-width="4.5" fill="none" stroke-linecap="round" />
+  <path d="M 68 44 Q 56 49 52 46" stroke="#14532d" stroke-width="4.5" fill="none" stroke-linecap="round" />
+
+  <!-- Two small glaring eyes staring down angrily -->
+  <ellipse cx="40" cy="54" rx="5.5" ry="6.5" fill="#ffffff" stroke="#14532d" stroke-width="2" />
+  <circle cx="42" cy="55" r="3" fill="#0f172a" />
+  <circle cx="43.2" cy="54" r="1.1" fill="#ffffff" />
+
+  <ellipse cx="60" cy="54" rx="5.5" ry="6.5" fill="#ffffff" stroke="#14532d" stroke-width="2" />
+  <circle cx="58" cy="55" r="3" fill="#0f172a" />
+  <circle cx="59.2" cy="54" r="1.1" fill="#ffffff" />
+
+  <!-- Deep grumpy scowl mouth -->
+  <path d="M 40 76 Q 50 68 60 76" stroke="#14532d" stroke-width="3.5" fill="none" stroke-linecap="round" />
+  <!-- Under-chin crease -->
+  <path d="M 44 82 Q 50 85 56 82" stroke="#14532d" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6" />
+</svg>
+  `,
   jalapeno: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 48 22 C 45 35 35 60 40 85 C 42 92 48 94 52 90 C 60 75 65 50 58 22 Z" fill="#dc2626" stroke="#991b1b" stroke-width="3" />
-      <path d="M 52 22 Q 54 10 60 8" stroke="#16a34a" stroke-width="5" fill="none" stroke-linecap="round" />
-      <circle cx="46" cy="45" r="3.5" fill="#ffffff" />
-      <circle cx="47" cy="45" r="2" fill="#0f172a" />
-      <circle cx="54" cy="45" r="3.5" fill="#ffffff" />
-      <circle cx="55" cy="45" r="2" fill="#0f172a" />
-      <path d="M 46 60 Q 50 56 54 60" stroke="#450a0a" stroke-width="2.5" fill="none" />
-      <polygon points="40,28 32,16 46,22" fill="#f97316" />
-      <polygon points="56,26 68,14 58,22" fill="#facc15" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <!-- Heat aura / sparks -->
+  <path d="M 30 30 Q 24 16 34 8" stroke="#f97316" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6" />
+  <path d="M 70 30 Q 76 16 66 8" stroke="#f97316" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6" />
 
+  <!-- Green Stem & Calyx Cap -->
+  <path d="M 50 20 Q 52 8 60 6" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round" />
+  <polygon points="36,22 44,26 50,20 56,26 64,22 50,18" fill="#22c55e" stroke="#15803d" stroke-width="2" />
+
+  <!-- Tapering Curved Chili Body -->
+  <path d="M 40 22 C 34 38 32 64 38 84 C 42 94 48 96 52 90 C 62 76 68 48 60 22 Z" fill="#dc2626" stroke="#991b1b" stroke-width="3" stroke-linejoin="round" />
+  <path d="M 42 24 C 36 38 36 64 42 82 C 40 64 42 42 48 24 Z" fill="#ef4444" />
+
+  <!-- Furrowed Fiery Eyebrows -->
+  <path d="M 36 40 L 46 46" stroke="#450a0a" stroke-width="3.5" stroke-linecap="round" />
+  <path d="M 64 40 L 54 46" stroke="#450a0a" stroke-width="3.5" stroke-linecap="round" />
+
+  <!-- Glowing Fiery Eyes -->
+  <ellipse cx="42" cy="48" rx="4.5" ry="5.5" fill="#fef08a" stroke="#450a0a" stroke-width="1.8" />
+  <circle cx="43" cy="49" r="2.5" fill="#450a0a" />
+  <ellipse cx="58" cy="48" rx="4.5" ry="5.5" fill="#fef08a" stroke="#450a0a" stroke-width="1.8" />
+  <circle cx="57" cy="49" r="2.5" fill="#450a0a" />
+
+  <!-- Gritted Teeth in Rage -->
+  <rect x="42" y="62" width="16" height="6" rx="2" fill="#ffffff" stroke="#450a0a" stroke-width="1.8" />
+  <line x1="47" y1="62" x2="47" y2="68" stroke="#450a0a" stroke-width="1.2" />
+  <line x1="53" y1="62" x2="53" y2="68" stroke="#450a0a" stroke-width="1.2" />
+</svg>
+  `,
   spikeweed: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="50" cy="78" rx="42" ry="12" fill="#15803d" stroke="#14532d" stroke-width="2.5" />
-      <polygon points="20,78 26,45 32,78" fill="#64748b" stroke="#334155" stroke-width="2" />
-      <polygon points="34,78 42,35 48,78" fill="#94a3b8" stroke="#334155" stroke-width="2" />
-      <polygon points="52,78 58,35 66,78" fill="#94a3b8" stroke="#334155" stroke-width="2" />
-      <polygon points="68,78 74,45 80,78" fill="#64748b" stroke="#334155" stroke-width="2" />
-      <circle cx="44" cy="74" r="3" fill="#facc15" />
-      <circle cx="56" cy="74" r="3" fill="#facc15" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <ellipse cx="50" cy="80" rx="44" ry="14" fill="#14532d" stroke="#052e16" stroke-width="2.5" />
+  <!-- Spiky bramble leaves around rim -->
+  <polygon points="12,80 6,70 18,74" fill="#15803d" />
+  <polygon points="88,80 94,70 82,74" fill="#15803d" />
+  <polygon points="30,86 24,94 36,90" fill="#16a34a" />
+  <polygon points="70,86 76,94 64,90" fill="#16a34a" />
 
+  <!-- Sharp Wooden Spikes jutting straight up -->
+  <polygon points="18,80 26,38 34,80" fill="#854d0e" stroke="#451a03" stroke-width="2.5" stroke-linejoin="round" />
+  <polygon points="26,38 29,80 34,80" fill="#a16207" />
+
+  <polygon points="34,80 44,28 52,80" fill="#a16207" stroke="#451a03" stroke-width="2.8" stroke-linejoin="round" />
+  <polygon points="44,28 48,80 52,80" fill="#ca8a04" />
+
+  <polygon points="50,80 60,30 68,80" fill="#854d0e" stroke="#451a03" stroke-width="2.8" stroke-linejoin="round" />
+  <polygon points="60,30 64,80 68,80" fill="#a16207" />
+
+  <polygon points="68,80 76,42 84,80" fill="#713f12" stroke="#451a03" stroke-width="2.5" stroke-linejoin="round" />
+  <polygon points="76,42 80,80 84,80" fill="#854d0e" />
+
+  <!-- Mischievous Glowing Yellow Eyes peeking from the bramble -->
+  <ellipse cx="44" cy="74" rx="4.5" ry="3.5" fill="#facc15" stroke="#451a03" stroke-width="1.5" />
+  <circle cx="45" cy="74" r="2" fill="#0f172a" />
+  <ellipse cx="58" cy="74" rx="4.5" ry="3.5" fill="#facc15" stroke="#451a03" stroke-width="1.5" />
+  <circle cx="59" cy="74" r="2" fill="#0f172a" />
+</svg>
+  `,
   torchwood: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="50" cy="85" rx="32" ry="8" fill="#1e293b" opacity="0.4" />
-      <path d="M 30 45 L 26 85 L 74 85 L 70 45 Z" fill="#78350f" stroke="#451a03" stroke-width="3" />
-      <ellipse cx="50" cy="45" rx="20" ry="8" fill="#92400e" stroke="#451a03" stroke-width="2" />
-      <path d="M 28 40 C 32 15 45 8 50 4 C 55 8 68 15 72 40 C 65 30 58 45 50 35 C 42 45 35 30 28 40 Z" fill="#f97316" stroke="#ea580c" stroke-width="2" />
-      <path d="M 36 38 C 40 22 48 14 50 12 C 52 14 60 22 64 38 C 58 32 54 40 50 34 C 46 40 42 32 36 38 Z" fill="#facc15" />
-      <circle cx="42" cy="62" r="3.5" fill="#fef08a" />
-      <circle cx="58" cy="62" r="3.5" fill="#fef08a" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <ellipse cx="50" cy="88" rx="32" ry="7" fill="#1e293b" opacity="0.4" />
 
+  <!-- Tree Stump Body (bark texture) -->
+  <path d="M 28 46 L 24 88 L 76 88 L 72 46 Z" fill="#78350f" stroke="#451a03" stroke-width="3" stroke-linejoin="round" />
+  <!-- Hollow top rim & cut wood core -->
+  <ellipse cx="50" cy="46" rx="22" ry="9" fill="#92400e" stroke="#451a03" stroke-width="2.5" />
+  <ellipse cx="50" cy="46" rx="16" ry="6" fill="#451a03" />
+
+  <!-- Bark Ridges & Knot -->
+  <path d="M 32 54 Q 30 70 34 82" stroke="#451a03" stroke-width="2" fill="none" opacity="0.5" />
+  <path d="M 68 54 Q 70 70 66 82" stroke="#451a03" stroke-width="2" fill="none" opacity="0.5" />
+
+  <!-- Cheerful Carved Face on Front of Trunk -->
+  <ellipse cx="40" cy="66" rx="4" ry="5.5" fill="#facc15" stroke="#451a03" stroke-width="1.5" />
+  <circle cx="41" cy="66" r="2.2" fill="#451a03" />
+  <ellipse cx="60" cy="66" rx="4" ry="5.5" fill="#facc15" stroke="#451a03" stroke-width="1.5" />
+  <circle cx="61" cy="66" r="2.2" fill="#451a03" />
+  <!-- Smiling mouth -->
+  <path d="M 42 76 Q 50 82 58 76" stroke="#451a03" stroke-width="2.8" fill="none" stroke-linecap="round" />
+
+  <!-- Roaring Multi-Layer Cartoon Fire Bursting Out of Stump -->
+  <!-- Outer Orange Flame -->
+  <path d="M 32 44 C 30 22 42 10 50 2 C 58 10 70 22 68 44 C 62 34 56 46 50 36 C 44 46 38 34 32 44 Z" fill="#f97316" stroke="#c2410c" stroke-width="2.5" stroke-linejoin="round" />
+  <!-- Inner Golden Core Flame -->
+  <path d="M 38 42 C 38 26 46 16 50 8 C 54 16 62 26 62 42 C 58 36 54 42 50 34 C 46 42 42 36 38 42 Z" fill="#facc15" />
+  <!-- White-hot center -->
+  <ellipse cx="50" cy="38" rx="6" ry="10" fill="#ffffff" opacity="0.8" />
+</svg>
+  `,
   tallnut: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <ellipse cx="50" cy="94" rx="26" ry="5" fill="#1e293b" opacity="0.4" />
-      <path d="M 50 6 C 72 6 78 30 76 65 C 74 92 64 94 50 94 C 36 94 26 92 24 65 C 22 30 28 6 50 6 Z" fill="#92400e" stroke="#451a03" stroke-width="3.5" />
-      <ellipse cx="40" cy="36" rx="5" ry="7" fill="#ffffff" stroke="#451a03" stroke-width="1.5" />
-      <circle cx="41" cy="36" r="3" fill="#0f172a" />
-      <ellipse cx="60" cy="36" rx="5" ry="7" fill="#ffffff" stroke="#451a03" stroke-width="1.5" />
-      <circle cx="61" cy="36" r="3" fill="#0f172a" />
-      <path d="M 42 54 L 58 54" stroke="#451a03" stroke-width="3" stroke-linecap="round" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <ellipse cx="50" cy="95" rx="26" ry="5" fill="#1e293b" opacity="0.4" />
+  <!-- Towering Walnut Body (twice as tall as regular Wall-nut) -->
+  <path d="M 50 5 C 72 5 78 30 76 65 C 74 92 64 95 50 95 C 36 95 26 92 24 65 C 22 30 28 5 50 5 Z" fill="#92400e" stroke="#451a03" stroke-width="3.5" stroke-linejoin="round" />
+  <path d="M 50 8 C 68 8 74 32 72 65 C 70 88 60 91 50 91 C 40 91 30 88 28 65 C 26 32 32 8 50 8 Z" fill="#b45309" />
+  
+  <!-- Bark fissures -->
+  <path d="M 30 40 Q 26 55 30 70" stroke="#451a03" stroke-width="2" fill="none" opacity="0.45" />
+  <path d="M 70 40 Q 74 55 70 70" stroke="#451a03" stroke-width="2" fill="none" opacity="0.45" />
 
+  <!-- Stoic, Heavy-Lidded Eyes -->
+  <path d="M 34 32 L 48 35" stroke="#451a03" stroke-width="2.5" stroke-linecap="round" />
+  <path d="M 66 32 L 52 35" stroke="#451a03" stroke-width="2.5" stroke-linecap="round" />
+  
+  <ellipse cx="40" cy="40" rx="5.5" ry="7.5" fill="#ffffff" stroke="#451a03" stroke-width="1.8" />
+  <circle cx="42" cy="40" r="3.2" fill="#0f172a" />
+  <circle cx="43.5" cy="38.5" r="1.2" fill="#ffffff" />
+
+  <ellipse cx="60" cy="40" rx="5.5" ry="7.5" fill="#ffffff" stroke="#451a03" stroke-width="1.8" />
+  <circle cx="62" cy="40" r="3.2" fill="#0f172a" />
+  <circle cx="63.5" cy="38.5" r="1.2" fill="#ffffff" />
+
+  <!-- Flat, Immovable Determined Mouth -->
+  <line x1="42" y1="58" x2="58" y2="58" stroke="#451a03" stroke-width="3" stroke-linecap="round" />
+  <!-- Heavy Chin Jowl -->
+  <path d="M 44 68 Q 50 72 56 68" stroke="#451a03" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.6" />
+</svg>
+  `,
   fumeshroom: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 42 55 L 40 88 L 60 88 L 58 55 Z" fill="#e9d5ff" stroke="#a855f7" stroke-width="2.5" />
-      <ellipse cx="50" cy="42" rx="30" ry="22" fill="#9333ea" stroke="#6b21a8" stroke-width="3" />
-      <ellipse cx="74" cy="42" rx="14" ry="10" fill="#7e22ce" stroke="#581c87" stroke-width="2.5" />
-      <ellipse cx="82" cy="42" rx="5" ry="8" fill="#3b0764" />
-      <circle cx="44" cy="36" r="4" fill="#facc15" stroke="#7e22ce" stroke-width="1.5" />
-      <circle cx="45" cy="36" r="2" fill="#0f172a" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <!-- Pale Lavender Stem Base -->
+  <path d="M 42 56 L 40 88 L 60 88 L 58 56 Z" fill="#e9d5ff" stroke="#7e22ce" stroke-width="2.5" stroke-linejoin="round" />
+  <ellipse cx="50" cy="88" rx="14" ry="4" fill="#d8b4fe" />
 
+  <!-- Big Purple Cap -->
+  <ellipse cx="50" cy="40" rx="30" ry="24" fill="#9333ea" stroke="#581c87" stroke-width="3" />
+  <!-- Dark Purple Mushroom Spots -->
+  <ellipse cx="36" cy="28" rx="6" ry="4" fill="#6b21a8" />
+  <ellipse cx="56" cy="24" rx="7" ry="5" fill="#6b21a8" />
+  <ellipse cx="68" cy="36" rx="5" ry="4" fill="#6b21a8" />
+
+  <!-- Flared Snout Nozzle extending right -->
+  <path d="M 64 36 L 78 32 L 78 52 L 64 48 Z" fill="#7e22ce" stroke="#581c87" stroke-width="2.5" />
+  <ellipse cx="78" cy="42" rx="5" ry="10" fill="#7e22ce" stroke="#581c87" stroke-width="2.8" />
+  <ellipse cx="80" cy="42" rx="3" ry="7.5" fill="#3b0764" />
+
+  <!-- Sleepy Eyes -->
+  <ellipse cx="44" cy="38" rx="5" ry="6.5" fill="#fef08a" stroke="#581c87" stroke-width="1.8" />
+  <circle cx="45" cy="39" r="2.8" fill="#0f172a" />
+  <circle cx="46" cy="37.5" r="1" fill="#ffffff" />
+  <!-- Droopy lid -->
+  <path d="M 39 36 Q 44 39 49 36" stroke="#581c87" stroke-width="2" fill="none" />
+</svg>
+  `,
   melonpult: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 28 65 L 24 88 L 76 88 L 72 65 Z" fill="#15803d" stroke="#166534" stroke-width="3" />
-      <path d="M 38 65 L 62 25" stroke="#78350f" stroke-width="6" stroke-linecap="round" />
-      <ellipse cx="62" cy="24" rx="18" ry="14" fill="#22c55e" stroke="#15803d" stroke-width="3" transform="rotate(-15 62 24)" />
-      <path d="M 48 24 Q 62 16 76 24" stroke="#14532d" stroke-width="2.5" fill="none" />
-      <circle cx="38" cy="74" r="5" fill="#facc15" />
-      <circle cx="62" cy="74" r="5" fill="#facc15" />
-    </svg>
-  `,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <!-- Wooden/Leafy Catapult Frame on Lawn -->
+  <ellipse cx="50" cy="92" rx="32" ry="6" fill="#1e293b" opacity="0.35" />
+  <path d="M 24 66 L 20 88 L 80 88 L 76 66 Z" fill="#15803d" stroke="#14532d" stroke-width="3" stroke-linejoin="round" />
+  <!-- Wheels -->
+  <circle cx="30" cy="86" r="8" fill="#78350f" stroke="#451a03" stroke-width="2" />
+  <circle cx="30" cy="86" r="3" fill="#ca8a04" />
+  <circle cx="70" cy="86" r="8" fill="#78350f" stroke="#451a03" stroke-width="2" />
+  <circle cx="70" cy="86" r="3" fill="#ca8a04" />
 
+  <!-- Catapult Arm reaching up & back -->
+  <line x1="38" y1="72" x2="62" y2="30" stroke="#78350f" stroke-width="7" stroke-linecap="round" />
+  <ellipse cx="64" cy="28" rx="12" ry="8" fill="#92400e" stroke="#451a03" stroke-width="2" />
+
+  <!-- Big Striped Green Watermelon Loaded in Basket -->
+  <ellipse cx="64" cy="22" rx="18" ry="14" fill="#22c55e" stroke="#14532d" stroke-width="2.8" transform="rotate(-15 64 22)" />
+  <!-- Dark green watermelon stripes -->
+  <path d="M 50 18 Q 64 22 78 26" stroke="#15803d" stroke-width="3" fill="none" />
+  <path d="M 52 14 Q 64 16 76 20" stroke="#15803d" stroke-width="2.5" fill="none" />
+  <path d="M 52 24 Q 64 28 76 32" stroke="#15803d" stroke-width="2.5" fill="none" />
+
+  <!-- Front face on the catapult body -->
+  <ellipse cx="44" cy="74" rx="4" ry="5.5" fill="#facc15" stroke="#14532d" stroke-width="1.5" />
+  <circle cx="45" cy="74" r="2.2" fill="#0f172a" />
+  <ellipse cx="60" cy="74" rx="4" ry="5.5" fill="#facc15" stroke="#14532d" stroke-width="1.5" />
+  <circle cx="61" cy="74" r="2.2" fill="#0f172a" />
+</svg>
+  `,
   hypnoshroom: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-      <path d="M 44 55 L 42 88 L 58 88 L 56 55 Z" fill="#fdf4ff" stroke="#d946ef" stroke-width="2.5" />
-      <ellipse cx="50" cy="42" rx="28" ry="24" fill="#d946ef" stroke="#a21caf" stroke-width="3" />
-      <ellipse cx="50" cy="42" rx="20" ry="16" fill="#06b6d4" />
-      <ellipse cx="50" cy="42" rx="12" ry="9" fill="#facc15" />
-      <circle cx="44" cy="42" r="3" fill="#0f172a" />
-      <circle cx="56" cy="42" r="3" fill="#0f172a" />
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+  <!-- Pale Violet Stem -->
+  <path d="M 44 56 L 42 88 L 58 88 L 56 56 Z" fill="#fdf4ff" stroke="#c026d3" stroke-width="2.5" stroke-linejoin="round" />
+
+  <!-- Psychedelic Rainbow Swirling Mushroom Cap -->
+  <ellipse cx="50" cy="40" rx="30" ry="24" fill="#d946ef" stroke="#86198f" stroke-width="3" />
+  <!-- Swirling Psychedelic Color Bands -->
+  <ellipse cx="50" cy="40" rx="23" ry="18" fill="#06b6d4" />
+  <ellipse cx="50" cy="40" rx="16" ry="12" fill="#facc15" />
+  <ellipse cx="50" cy="40" rx="9" ry="6" fill="#ec4899" />
+
+  <!-- Hypnotic Spiral Eyes -->
+  <circle cx="42" cy="40" r="6" fill="#ffffff" stroke="#86198f" stroke-width="1.5" />
+  <path d="M 42 36 A 4 4 0 1 0 44 41 A 2 2 0 1 0 42 39" stroke="#7e22ce" stroke-width="2" fill="none" />
+
+  <circle cx="58" cy="40" r="6" fill="#ffffff" stroke="#86198f" stroke-width="1.5" />
+  <path d="M 58 36 A 4 4 0 1 0 60 41 A 2 2 0 1 0 58 39" stroke="#7e22ce" stroke-width="2" fill="none" />
+</svg>
   `,
 };
 
