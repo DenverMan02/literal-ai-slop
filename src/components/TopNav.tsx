@@ -1,12 +1,12 @@
 import React from 'react';
 import { PlayerProfile, GameMode } from '../types/game';
-import { HardDrive, Trophy, Volume2, VolumeX, Shield } from 'lucide-react';
+import { HardDrive, Trophy, Home, Map } from 'lucide-react';
 
 interface TopNavProps {
-  currentTab: 'GAME' | 'WORLD_RAID' | 'DAILY' | 'LEADERBOARD' | 'ALMANAC';
+  currentTab: 'HUB' | 'LEVEL_SELECT' | 'GAME' | 'WORLD_RAID' | 'DAILY' | 'LEADERBOARD' | 'ALMANAC';
   gameMode: GameMode;
   profile: PlayerProfile;
-  onSelectTab: (tab: 'GAME' | 'WORLD_RAID' | 'DAILY' | 'LEADERBOARD' | 'ALMANAC') => void;
+  onSelectTab: (tab: 'HUB' | 'LEVEL_SELECT' | 'GAME' | 'WORLD_RAID' | 'DAILY' | 'LEADERBOARD' | 'ALMANAC') => void;
   onOpenCloudSync: () => void;
 }
 
@@ -18,11 +18,12 @@ export const TopNav: React.FC<TopNavProps> = ({
 }) => {
   return (
     <header className="w-full flex items-center justify-between gap-4 px-3 sm:px-6 py-2.5 bg-stone-950/95 border-b-2 border-stone-800 backdrop-blur-md sticky top-0 z-50 select-none shadow-md">
-      {/* Brand Title with Leaf / Sprout Icon */}
+      {/* Brand Title with Sprout Icon -> jumps to HUB */}
       <button
         type="button"
-        onClick={() => onSelectTab('GAME')}
+        onClick={() => onSelectTab('HUB')}
         className="text-base sm:text-lg font-black tracking-tight text-white hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 text-left cursor-pointer"
+        title="Backyard Command Hub"
       >
         <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-emerald-400/40 shadow-sm" />
         <span className="bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent font-extrabold">
@@ -30,18 +31,32 @@ export const TopNav: React.FC<TopNavProps> = ({
         </span>
       </button>
 
-      {/* Game Mode Tabs */}
-      <nav className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-bold text-stone-300 overflow-x-auto py-0.5">
+      {/* Navigation Tabs */}
+      <nav className="flex items-center gap-1.5 sm:gap-3 text-xs sm:text-sm font-bold text-stone-300 overflow-x-auto py-0.5">
         <button
           type="button"
-          onClick={() => onSelectTab('GAME')}
-          className={`px-2.5 py-1 rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-            currentTab === 'GAME'
+          onClick={() => onSelectTab('HUB')}
+          className={`px-2.5 py-1 rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1 ${
+            currentTab === 'HUB'
               ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 shadow-sm'
               : 'text-stone-400 hover:text-white hover:bg-stone-850'
           }`}
         >
-          Campaign
+          <Home className="w-3.5 h-3.5" />
+          <span>Hub</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onSelectTab('LEVEL_SELECT')}
+          className={`px-2.5 py-1 rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1 ${
+            currentTab === 'LEVEL_SELECT'
+              ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 shadow-sm'
+              : 'text-stone-400 hover:text-white hover:bg-stone-850'
+          }`}
+        >
+          <Map className="w-3.5 h-3.5" />
+          <span>Stage Map</span>
         </button>
 
         <button
@@ -65,19 +80,7 @@ export const TopNav: React.FC<TopNavProps> = ({
               : 'text-stone-400 hover:text-white hover:bg-stone-850'
           }`}
         >
-          Daily Challenge
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onSelectTab('LEADERBOARD')}
-          className={`px-2.5 py-1 rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-            currentTab === 'LEADERBOARD'
-              ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 shadow-sm'
-              : 'text-stone-400 hover:text-white hover:bg-stone-850'
-          }`}
-        >
-          Leaderboard
+          Daily Run
         </button>
 
         <button
@@ -90,6 +93,18 @@ export const TopNav: React.FC<TopNavProps> = ({
           }`}
         >
           Almanac
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onSelectTab('LEADERBOARD')}
+          className={`px-2.5 py-1 rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+            currentTab === 'LEADERBOARD'
+              ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 shadow-sm'
+              : 'text-stone-400 hover:text-white hover:bg-stone-850'
+          }`}
+        >
+          Leaderboard
         </button>
       </nav>
 

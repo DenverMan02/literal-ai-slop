@@ -199,6 +199,7 @@ export interface PlayerProfile {
   sunCrests: number;
   highestWaveCampaign: number;
   campaignLevelIndex?: number;
+  maxUnlockedLevel?: number;
   selectedDeck?: PlantId[];
   dailyCompletedDates: string[];
   worldBossTotalDamage: number;

@@ -361,14 +361,14 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           let scaleYMult = 1.0;
 
           if (zombie.isEating) {
-            // EATING ANIMATION: aggressive forward head-dipping chomping
+            // EATING ANIMATION: visibly leaning forward across the tile border towards the plant at tile-1
             const chompPhase = time * 14;
-            const lungeX = -Math.abs(Math.sin(chompPhase)) * 5 * scaleXMult;
-            const chompBob = Math.abs(Math.cos(chompPhase)) * 3;
+            const lungeX = (-28 - Math.abs(Math.sin(chompPhase)) * 8) * scaleXMult;
+            const chompBob = Math.abs(Math.cos(chompPhase)) * 4;
             posX += lungeX;
             posY += chompBob;
-            rot = -Math.sin(chompPhase) * 0.1 * scaleXMult;
-            scaleYMult = 1.0 + Math.sin(chompPhase) * 0.04;
+            rot = -Math.sin(chompPhase) * 0.12 * scaleXMult;
+            scaleYMult = 1.0 + Math.sin(chompPhase) * 0.05;
           } else if (isWalking) {
             // SHAMBLING LIMPIN WALK CYCLE:
             const stepBob = Math.abs(Math.sin(anim.walkCycle * 4)) * 4.5;
@@ -564,30 +564,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   const totalEntities = plants.length + zombies.length + projectiles.length + hazards.length;
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto overflow-hidden rounded-xl border-4 border-amber-950/80 bg-stone-900 shadow-2xl select-none">
-      {/* Top Soil Curb Header with Engine Info & FPS */}
-      <div className="w-full h-8 bg-gradient-to-r from-amber-950 via-stone-900 to-amber-950 border-b border-amber-800/40 px-3 flex items-center justify-between text-xs font-mono">
-        <div className="flex items-center gap-2 text-emerald-400 font-bold">
-          <Cpu className="w-4 h-4 text-emerald-400 animate-pulse" />
-          <span>PIXI.JS v8 WebGL Accelerated</span>
-          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-700/60 text-[10px] text-emerald-300">
-            {fps} FPS
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3 text-stone-400 text-[11px]">
-          <span>
-            Entities: <strong className="text-amber-300">{totalEntities}</strong> (
-            <span className="text-emerald-400">{plants.length}P</span> /{' '}
-            <span className="text-red-400">{zombies.length}Z</span> /{' '}
-            <span className="text-cyan-400">{projectiles.length}Proj</span>)
-          </span>
-          <span className="hidden sm:flex items-center gap-1 text-emerald-400">
-            <ShieldCheck className="w-3.5 h-3.5" /> High-Cap Ready
-          </span>
-        </div>
-      </div>
-
+    <div className="relative w-full max-w-6xl xl:max-w-7xl mx-auto overflow-hidden rounded-2xl border-4 border-amber-950/80 bg-stone-900 shadow-2xl select-none">
       {/* Main Pixi.js Canvas Viewport + Smooth Floating Text Overlay */}
       <div
         className="relative w-full aspect-[960/520] cursor-pointer bg-slate-950"
@@ -627,12 +604,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
             );
           })}
         </div>
-      </div>
-
-      {/* Lawn Footer Curb */}
-      <div className="w-full h-5 bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 border-t border-amber-800/40 flex items-center justify-between px-4 text-[10px] font-mono text-amber-500/80">
-        <span className="capitalize">Theme: {lawnTheme} Lawn</span>
-        <span>Resolution: 960x520 WebGL (5x8 Grid)</span>
       </div>
     </div>
   );

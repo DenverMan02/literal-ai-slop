@@ -8,6 +8,7 @@ import {
   SkipForward,
   RotateCcw,
   Sparkles,
+  ArrowLeft,
 } from 'lucide-react';
 import { TurnPhase } from '../types/game';
 
@@ -16,7 +17,8 @@ interface HUDProps {
   sectorName: string;
   currentLevelIndex: number;
   totalLevels: number;
-  onSelectLevel: (idx: number) => void;
+  onSelectLevel?: (idx: number) => void;
+  onBackToStageMap?: () => void;
   currentWave: number;
   totalWaves: number;
   turnPhase: TurnPhase;
@@ -40,6 +42,7 @@ export const HUD: React.FC<HUDProps> = ({
   currentLevelIndex,
   totalLevels,
   onSelectLevel,
+  onBackToStageMap,
   currentWave,
   totalWaves,
   turnPhase,
@@ -65,31 +68,24 @@ export const HUD: React.FC<HUDProps> = ({
 
   return (
     <div className="w-full bg-stone-950/90 border-b border-stone-800 px-3 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-3 shadow-md select-none text-xs">
-      {/* Left: Sector Plaque & Quick Sector Jump */}
+      {/* Left: Sector Plaque & Back to Stage Map */}
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+        {onBackToStageMap && (
+          <button
+            type="button"
+            onClick={onBackToStageMap}
+            className="px-2.5 py-1 bg-stone-900 hover:bg-stone-850 border border-stone-700 text-stone-300 hover:text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            title="Return to Campaign Stage Map"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Stage Map</span>
+          </button>
+        )}
+
         <div className="flex items-center gap-2 bg-stone-900 border border-stone-800 px-2.5 py-1 rounded-lg">
           <span className="font-extrabold text-stone-100">{levelName}</span>
           <span className="text-stone-600">·</span>
           <span className="text-emerald-400 font-semibold">{sectorName}</span>
-        </div>
-
-        {/* Sector quick selector */}
-        <div className="flex items-center gap-1">
-          {Array.from({ length: totalLevels }).map((_, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => onSelectLevel(idx)}
-              className={`w-6 h-6 rounded flex items-center justify-center font-mono font-bold text-[11px] transition-all cursor-pointer ${
-                currentLevelIndex === idx
-                  ? 'bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-400'
-                  : 'bg-stone-900 text-stone-400 hover:text-white hover:bg-stone-800 border border-stone-800'
-              }`}
-              title={`Switch to Sector ${idx + 1}`}
-            >
-              {idx + 1}
-            </button>
-          ))}
         </div>
       </div>
 

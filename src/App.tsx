@@ -35,12 +35,15 @@ import { AlmanacView } from './components/views/AlmanacView';
 import { CloudSaveModal } from './components/modals/CloudSaveModal';
 import { GameOverModal } from './components/modals/GameOverModal';
 import { ChooseSeedsModal } from './components/modals/ChooseSeedsModal';
-import { RotateCcw, Sun, Shovel, Play } from 'lucide-react';
+import { HubView } from './components/views/HubView';
+import { LevelSelectView } from './components/views/LevelSelectView';
+import { RotateCcw, Sun, Shovel, Play, ArrowLeft } from 'lucide-react';
 
 export default function App() {
-  // Navigation & Profile
-  const [activeTab, setActiveTab] = useState<'GAME' | 'WORLD_RAID' | 'DAILY' | 'LEADERBOARD' | 'ALMANAC'>('GAME');
+  // Navigation & Profile (Default to Backyard HUB)
+  const [activeTab, setActiveTab] = useState<'HUB' | 'LEVEL_SELECT' | 'GAME' | 'WORLD_RAID' | 'DAILY' | 'LEADERBOARD' | 'ALMANAC'>('HUB');
   const [profile, setProfile] = useState<PlayerProfile>(() => StorageService.getProfile());
+  const [newlyUnlockedPlants, setNewlyUnlockedPlants] = useState<PlantId[]>([]);
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
   const [isChoosingSeeds, setIsChoosingSeeds] = useState(false);
   const [gameMode, setGameMode] = useState<GameMode>('CAMPAIGN');
@@ -152,13 +155,17 @@ export default function App() {
     });
   }, [gameMode, dailyConfig]);
 
-  // Active seeds chosen for this battle
+  // Active seeds chosen for this battle (filtered by player unlocks)
   const availablePlantIds: PlantId[] = useMemo(() => {
-    const active = selectedDeck.filter((id) => allAvailablePlantIds.includes(id));
-    return active.length > 0 ? active : allAvailablePlantIds.slice(0, 8);
-  }, [selectedDeck, allAvailablePlantIds]);
+    const unlocked = profile.unlockedPlants || ['sunflower', 'peashooter', 'wallnut'];
+    const active = selectedDeck.filter((id) => allAvailablePlantIds.includes(id) && unlocked.includes(id));
+    return active.length > 0 ? active : unlocked.slice(0, 8);
+  }, [selectedDeck, allAvailablePlantIds, profile.unlockedPlants]);
 
   const handleToggleSeed = (pId: PlantId) => {
+    const unlocked = profile.unlockedPlants || ['sunflower', 'peashooter', 'wallnut'];
+    if (!unlocked.includes(pId)) return; // Cannot select locked plants!
+
     setSelectedDeck((prev) => {
       let next: PlantId[];
       if (prev.includes(pId)) {
@@ -336,8 +343,9 @@ export default function App() {
     if (currentLevelIndex < CAMPAIGN_LEVELS.length - 1) {
       const nextIdx = currentLevelIndex + 1;
       setCurrentLevelIndex(nextIdx);
-      StorageService.updateCampaignProgress(nextIdx);
+      setNewlyUnlockedPlants([]);
       initBattle(CAMPAIGN_LEVELS[nextIdx], 'CAMPAIGN');
+      setIsChoosingSeeds(true);
     }
   };
 
@@ -345,8 +353,9 @@ export default function App() {
   const handleSelectLevel = (idx: number) => {
     if (idx >= 0 && idx < CAMPAIGN_LEVELS.length) {
       setCurrentLevelIndex(idx);
-      StorageService.updateCampaignProgress(idx);
+      setNewlyUnlockedPlants([]);
       initBattle(CAMPAIGN_LEVELS[idx], 'CAMPAIGN');
+      setIsChoosingSeeds(true);
     }
   };
 
@@ -1157,10 +1166,15 @@ export default function App() {
               zombie.jackFuseRemaining = currentFuse - 1;
             }
 
-            // Check if there is a blocking plant in the exact same grid tile (spikeweed is not eaten!)
-            const blockingPlant = updatedPlants.find(
+            // Check if there is a blocking plant: zombies attack from a tile away (plant in front or on same tile)
+            // Note: Spikeweed is not eaten; it damages zombies from beneath!
+            const plantInFront = updatedPlants.find(
+              (p) => p.row === zombie.row && p.col === zombie.col - 1 && p.hp > 0 && p.plantId !== 'spikeweed'
+            );
+            const plantOnSameTile = updatedPlants.find(
               (p) => p.row === zombie.row && p.col === zombie.col && p.hp > 0 && p.plantId !== 'spikeweed'
             );
+            const blockingPlant = plantInFront || plantOnSameTile;
 
             if (blockingPlant) {
               // HYPNO-SHROOM: When bitten, hypnotizes the zombie!
@@ -1188,12 +1202,12 @@ export default function App() {
                   id: 'ice_' + Math.random().toString(36).substring(2, 7),
                   type: 'ice_trail',
                   row: zombie.row,
-                  col: zombie.col,
+                  col: blockingPlant.col,
                   turnsRemaining: 8,
                 });
                 return {
                   ...zombie,
-                  col: zombie.col - 1,
+                  col: blockingPlant.col,
                   isEating: false,
                 };
               }
@@ -1210,30 +1224,32 @@ export default function App() {
                 }
               }
 
-              // Normal Pole Vault over regular plants
+              // Normal Pole Vault over regular plants (vaults over blocking plant to blockingPlant.col - 1)
               if (zombie.zombieId === 'polevaulter' && !zombie.hasVaulted && blockingPlant.plantId !== 'tallnut') {
                 sounds.playTurnCommit();
-                addFloatingText(zombie.row, zombie.col - 1, 'POLE VAULT!', 'orange');
+                const vaultLandingCol = Math.max(0, blockingPlant.col - 1);
+                addFloatingText(zombie.row, vaultLandingCol, 'POLE VAULT!', 'orange');
                 return {
                   ...zombie,
-                  col: zombie.col - 1,
+                  col: vaultLandingCol,
                   hasVaulted: true,
                   isEating: false,
                 };
               }
 
-              // Normal Pogo Jump over regular plants
+              // Normal Pogo Jump over regular plants (hops over blocking plant to blockingPlant.col - 1)
               if (zombie.zombieId === 'pogo' && zombie.isPogoJumping && blockingPlant.plantId !== 'tallnut') {
                 sounds.playTurnCommit();
-                addFloatingText(zombie.row, zombie.col - 1, 'POGO HOP!', 'orange');
+                const pogoLandingCol = Math.max(0, blockingPlant.col - 1);
+                addFloatingText(zombie.row, pogoLandingCol, 'POGO HOP!', 'orange');
                 return {
                   ...zombie,
-                  col: zombie.col - 1,
+                  col: pogoLandingCol,
                   isEating: false,
                 };
               }
 
-              // Normal bite on plant
+              // Normal bite on plant - attacks across the tile boundary from its own tile
               sounds.playBite();
               const newPlantHp = blockingPlant.hp - zombie.damagePerTurn;
               addFloatingText(
@@ -1457,11 +1473,13 @@ export default function App() {
           const trophiesWon = activeLevel.rewardTrophies;
           StorageService.addTrophies(trophiesWon, 25);
           if (gameMode === 'CAMPAIGN') {
-            const nextUnlocked = Math.min(CAMPAIGN_LEVELS.length - 1, currentLevelIndex + 1);
-            StorageService.updateCampaignProgress(nextUnlocked);
+            const res = StorageService.completeLevel(currentLevelIndex);
+            setNewlyUnlockedPlants(res.newlyUnlockedPlants);
+            setProfile(res.profile);
+          } else {
+            const updatedProfile = StorageService.getProfile();
+            setProfile(updatedProfile);
           }
-          const updatedProfile = StorageService.getProfile();
-          setProfile(updatedProfile);
 
           if (gameMode === 'WORLD_RAID') {
             const raidDmg = stats.damageDealt + 2500;
@@ -1540,6 +1558,45 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col">
+        {/* Backyard Command Hub (Default Screen) */}
+        {activeTab === 'HUB' && (
+          <HubView
+            profile={profile}
+            onPlayCampaign={() => {
+              const currentLvl = Math.min(
+                CAMPAIGN_LEVELS.length - 1,
+                Math.max(0, profile.campaignLevelIndex ?? 0)
+              );
+              setCurrentLevelIndex(currentLvl);
+              initBattle(CAMPAIGN_LEVELS[currentLvl], 'CAMPAIGN');
+              setActiveTab('GAME');
+              setIsChoosingSeeds(true);
+            }}
+            onOpenLevelSelect={() => setActiveTab('LEVEL_SELECT')}
+            onOpenWorldRaid={() => setActiveTab('WORLD_RAID')}
+            onOpenDaily={() => setActiveTab('DAILY')}
+            onOpenAlmanac={() => setActiveTab('ALMANAC')}
+            onOpenLeaderboard={() => setActiveTab('LEADERBOARD')}
+            onOpenSaveModal={() => setIsCloudModalOpen(true)}
+          />
+        )}
+
+        {/* Campaign Stage Map Level Select */}
+        {activeTab === 'LEVEL_SELECT' && (
+          <LevelSelectView
+            levels={CAMPAIGN_LEVELS}
+            profile={profile}
+            onSelectLevel={(idx) => {
+              setCurrentLevelIndex(idx);
+              initBattle(CAMPAIGN_LEVELS[idx], 'CAMPAIGN');
+              setActiveTab('GAME');
+              setIsChoosingSeeds(true);
+            }}
+            onBackToHub={() => setActiveTab('HUB')}
+          />
+        )}
+
+        {/* Tactical Battlefield */}
         {activeTab === 'GAME' && (
           <div className="flex-1 flex flex-col">
             {/* Top Tactical Status Bar */}
@@ -1548,7 +1605,7 @@ export default function App() {
               sectorName={activeLevel.sectorName}
               currentLevelIndex={currentLevelIndex}
               totalLevels={CAMPAIGN_LEVELS.length}
-              onSelectLevel={handleSelectLevel}
+              onBackToStageMap={() => setActiveTab('LEVEL_SELECT')}
               currentWave={currentWave}
               totalWaves={gameMode === 'DAILY' ? dailyConfig.totalWaves : activeLevel.totalWaves}
               turnPhase={turnPhase}
@@ -1566,8 +1623,8 @@ export default function App() {
               onRestart={restartCurrentBattle}
             />
 
-            {/* Tactical Battle Arena */}
-            <div className="flex-1 p-2 sm:p-4 flex flex-col items-center justify-center gap-3 max-w-6xl mx-auto w-full">
+            {/* Tactical Battle Arena (Edge-to-edge layout maximizing vertical & horizontal space) */}
+            <div className="flex-1 p-2 sm:p-3 flex flex-col items-center justify-start gap-2.5 max-w-6xl xl:max-w-7xl mx-auto w-full">
               {/* Authentic Wooden PvZ Seed Bank Frame */}
               <div className="w-full bg-stone-900 border-2 border-amber-900/80 rounded-2xl p-2 sm:p-2.5 shadow-2xl flex flex-wrap items-center justify-between gap-3 select-none">
                 {/* Left: Classic PvZ Sun Counter */}
@@ -1712,6 +1769,7 @@ export default function App() {
         isOpen={isChoosingSeeds}
         level={activeLevel}
         allAvailablePlantIds={allAvailablePlantIds}
+        unlockedPlantIds={profile.unlockedPlants || ['sunflower', 'peashooter', 'wallnut']}
         selectedSeedIds={selectedDeck}
         maxSeeds={8}
         onToggleSeed={handleToggleSeed}
@@ -1720,6 +1778,10 @@ export default function App() {
         onStartBattle={() => {
           setIsChoosingSeeds(false);
           restartCurrentBattle();
+        }}
+        onCancel={() => {
+          setIsChoosingSeeds(false);
+          setActiveTab('LEVEL_SELECT');
         }}
       />
 
@@ -1750,8 +1812,13 @@ export default function App() {
         damageDealt={stats.damageDealt}
         score={stats.score}
         trophiesEarned={stats.trophiesEarned}
+        newlyUnlockedPlants={newlyUnlockedPlants}
         hasNextSector={currentLevelIndex < CAMPAIGN_LEVELS.length - 1}
         onNextSector={handleNextSector}
+        onReturnToMap={() => {
+          setGameStatus('PLAYING');
+          setActiveTab('LEVEL_SELECT');
+        }}
         onRestart={restartCurrentBattle}
         onViewLeaderboard={() => {
           setGameStatus('PLAYING');

@@ -3,44 +3,34 @@ import { PlayerProfile, PlantId, SaveSlotData } from '../types/game';
 const STORAGE_KEY = 'pvz_tactics_profile_v2';
 const SLOTS_KEY = 'pvz_tactics_save_slots_v2';
 
+export const INITIAL_UNLOCKED_PLANTS: PlantId[] = [
+  'sunflower',
+  'peashooter',
+  'wallnut',
+];
+
+export const LEVEL_PLANT_UNLOCKS: Record<number, PlantId[]> = {
+  0: ['potatomine', 'snowpea'],              // Sector 1 clears unlock Potato Mine & Snow Pea
+  1: ['repeater', 'chomper'],                // Sector 2 clears unlock Repeater & Chomper
+  2: ['cherrybomb', 'squash'],               // Sector 3 clears unlock Cherry Bomb & Squash
+  3: ['spikeweed', 'jalapeno'],              // Sector 4 clears unlock Spikeweed & Jalapeno
+  4: ['torchwood', 'tallnut', 'fumeshroom'], // Sector 5 clears unlock Torchwood, Tall-nut & Fume-shroom
+  5: ['melonpult', 'hypnoshroom'],           // Sector 6 clears unlock Melon-pult & Hypno-shroom
+};
+
 export const DEFAULT_PROFILE: PlayerProfile = {
   id: 'usr_' + Math.random().toString(36).substring(2, 9),
   name: 'Crazy Dave',
   rank: 1,
-  trophies: 100,
-  sunCrests: 45,
+  trophies: 0,
+  sunCrests: 10,
   highestWaveCampaign: 1,
   campaignLevelIndex: 0,
-  selectedDeck: [
-    'sunflower',
-    'peashooter',
-    'wallnut',
-    'snowpea',
-    'fumeshroom',
-    'repeater',
-    'cherrybomb',
-    'tallnut',
-  ],
+  maxUnlockedLevel: 0,
+  selectedDeck: ['sunflower', 'peashooter', 'wallnut'],
   dailyCompletedDates: [],
   worldBossTotalDamage: 0,
-  unlockedPlants: [
-    'sunflower',
-    'peashooter',
-    'wallnut',
-    'snowpea',
-    'repeater',
-    'potatomine',
-    'chomper',
-    'cherrybomb',
-    'squash',
-    'jalapeno',
-    'spikeweed',
-    'torchwood',
-    'tallnut',
-    'fumeshroom',
-    'melonpult',
-    'hypnoshroom',
-  ],
+  unlockedPlants: ['sunflower', 'peashooter', 'wallnut'],
   soundVolume: 0.6,
   soundEnabled: true,
   lastSynced: new Date().toISOString(),
@@ -55,11 +45,21 @@ export class StorageService {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
+        const unlocked: PlantId[] = Array.isArray(parsed.unlockedPlants) && parsed.unlockedPlants.length > 0
+          ? Array.from(new Set([...INITIAL_UNLOCKED_PLANTS, ...parsed.unlockedPlants]))
+          : [...INITIAL_UNLOCKED_PLANTS];
+
+        const deck: PlantId[] = Array.isArray(parsed.selectedDeck) && parsed.selectedDeck.length > 0
+          ? parsed.selectedDeck.filter((id: PlantId) => unlocked.includes(id))
+          : unlocked.slice(0, 8);
+
         return {
           ...DEFAULT_PROFILE,
           ...parsed,
           campaignLevelIndex: parsed.campaignLevelIndex ?? 0,
-          selectedDeck: parsed.selectedDeck && parsed.selectedDeck.length > 0 ? parsed.selectedDeck : DEFAULT_PROFILE.selectedDeck,
+          maxUnlockedLevel: parsed.maxUnlockedLevel ?? parsed.campaignLevelIndex ?? 0,
+          unlockedPlants: unlocked,
+          selectedDeck: deck.length > 0 ? deck : unlocked.slice(0, 3),
         };
       }
     } catch {
@@ -79,6 +79,45 @@ export class StorageService {
     } catch {
       // Fallback
     }
+  }
+
+  /**
+   * Updates current campaign level progress and awards newly unlocked plants upon level completion.
+   */
+  public static completeLevel(levelIndex: number): {
+    profile: PlayerProfile;
+    newlyUnlockedPlants: PlantId[];
+    nextLevelUnlocked: boolean;
+  } {
+    const profile = this.getProfile();
+    const nextLevel = Math.min(5, levelIndex + 1);
+    const wasAlreadyUnlocked = (profile.maxUnlockedLevel ?? 0) >= nextLevel;
+    profile.maxUnlockedLevel = Math.max(profile.maxUnlockedLevel ?? 0, nextLevel);
+    profile.campaignLevelIndex = nextLevel;
+    profile.highestWaveCampaign = Math.max(profile.highestWaveCampaign, levelIndex + 1);
+
+    const rewards = LEVEL_PLANT_UNLOCKS[levelIndex] || [];
+    const newlyUnlocked: PlantId[] = [];
+    rewards.forEach((pId) => {
+      if (!profile.unlockedPlants.includes(pId)) {
+        profile.unlockedPlants.push(pId);
+        newlyUnlocked.push(pId);
+      }
+    });
+
+    // Auto-equip newly unlocked plants if deck has free slots (< 8)
+    if (newlyUnlocked.length > 0 && (!profile.selectedDeck || profile.selectedDeck.length < 8)) {
+      const currentDeck = profile.selectedDeck || [];
+      const slotsAvailable = 8 - currentDeck.length;
+      profile.selectedDeck = [...currentDeck, ...newlyUnlocked.slice(0, slotsAvailable)];
+    }
+
+    this.saveProfile(profile);
+    return {
+      profile,
+      newlyUnlockedPlants: newlyUnlocked,
+      nextLevelUnlocked: !wasAlreadyUnlocked && nextLevel > levelIndex,
+    };
   }
 
   /**
